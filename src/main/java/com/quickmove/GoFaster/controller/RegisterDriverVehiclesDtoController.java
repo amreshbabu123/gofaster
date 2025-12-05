@@ -23,13 +23,6 @@ public class RegisterDriverVehiclesDtoController {
 		
 	}
 	
-
-
-//   @GetMapping("/driver/{mobileNo}")
-//	public  ResponseStructure<Driver> findDriver(@PathVariable long mobileNo){
-//	  return ds.findDriver(mobileNo);	
-//    }
-	
 	
 	@GetMapping("/driver/{mobileNo}")
 	public ResponseStructure<Driver> findDriver(@PathVariable long mobileNo){
