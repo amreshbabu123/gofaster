@@ -1,9 +1,16 @@
 package com.quickmove.GoFaster.entity;
 
+
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Driver {
@@ -13,15 +20,15 @@ public class Driver {
 	    private String licenceNo;
 	    private String upiId;
 	    private String name;
-	    private String status;
+	    private String status="Available";
 	    private int age;
 	    private String mobileNo;
 	    private String gender;
 	    private String mailId;
+	    @OneToOne(mappedBy = "driver", cascade = CascadeType.ALL)
 	    private Vehicle vehicle;
-	    
-	    
-		public Long getId() {
+
+	    public Long getId() {
 			return id;
 		}
 		public void setId(Long id) {
@@ -81,11 +88,13 @@ public class Driver {
 		public void setVehicle(Vehicle vehicle) {
 			this.vehicle = vehicle;
 		}
+
+		
 		
 		public Driver(Long id, String licenceNo, String upiId, String name, String status, int age, String mobileNo,
 				String gender, String mailId, Vehicle vehicle) {
 			super();
-			this.id = id;
+			
 			this.licenceNo = licenceNo;
 			this.upiId = upiId;
 			this.name = name;

@@ -1,7 +1,8 @@
 package com.quickmove.GoFaster.dto;
 
-public class RegisterDriverVehiclesDto
-{
+
+public class RegisterDriverVehiclesDto {
+	
 	private int licenceNo;
 	private int upiId;
 	private String driverName;
@@ -12,7 +13,7 @@ public class RegisterDriverVehiclesDto
 	private String vehicleName;
 	private int vehicleNo;
 	private String vehicleType;
-	private int vehicles;
+	
 	private String vehicleCapacity;
 	private double latitude;
 	private double longitude;
@@ -77,12 +78,7 @@ public class RegisterDriverVehiclesDto
 	public void setVehicleType(String vehicleType) {
 		this.vehicleType = vehicleType;
 	}
-	public int getVehicles() {
-		return vehicles;
-	}
-	public void setVehicles(int vehicles) {
-		this.vehicles = vehicles;
-	}
+	
 	public String getVehicleCapacity() {
 		return vehicleCapacity;
 	}
@@ -107,26 +103,7 @@ public class RegisterDriverVehiclesDto
 	public void setPricePerKm(String pricePerKm) {
 		this.pricePerKm = pricePerKm;
 	}
-	public RegisterDriverVehiclesDto(int licenceNo, int upiId, String driverName, int age, long mobileNumber,
-			Character gender, String mailId, String vehicleName, int vehicleNo, String vehicleType, int vehicles,
-			String vehicleCapacity, double latitude, double longitude, String pricePerKm) {
-		super();
-		this.licenceNo = licenceNo;
-		this.upiId = upiId;
-		this.driverName = driverName;
-		this.age = age;
-		this.mobileNumber = mobileNumber;
-		this.gender = gender;
-		this.mailId = mailId;
-		this.vehicleName = vehicleName;
-		this.vehicleNo = vehicleNo;
-		this.vehicleType = vehicleType;
-		this.vehicles = vehicles;
-		this.vehicleCapacity = vehicleCapacity;
-		this.latitude = latitude;
-		this.longitude = longitude;
-		this.pricePerKm = pricePerKm;
-	}
+	
 	public RegisterDriverVehiclesDto() {
 		super();
 	}
@@ -135,7 +112,7 @@ public class RegisterDriverVehiclesDto
 		return "RegisterDriverVehiclesDto [licenceNo=" + licenceNo + ", upiId=" + upiId + ", driverName=" + driverName
 				+ ", age=" + age + ", mobileNumber=" + mobileNumber + ", gender=" + gender + ", mailId=" + mailId
 				+ ", vehicleName=" + vehicleName + ", vehicleNo=" + vehicleNo + ", vehicleType=" + vehicleType
-				+ ", vehicles=" + vehicles + ", vehicleCapacity=" + vehicleCapacity + ", latitude=" + latitude
+				+  ", vehicleCapacity=" + vehicleCapacity + ", latitude=" + latitude
 				+ ", longitude=" + longitude + ", pricePerKm=" + pricePerKm + "]";
 	}
 	
