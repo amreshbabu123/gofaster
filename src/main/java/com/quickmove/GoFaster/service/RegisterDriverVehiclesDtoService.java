@@ -1,8 +1,10 @@
 package com.quickmove.GoFaster.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.quickmove.GoFaster.ResponseStructure;
 import com.quickmove.GoFaster.dto.RegisterDriverVehiclesDto;
 import com.quickmove.GoFaster.entity.Driver;
 import com.quickmove.GoFaster.entity.Vehicle;
@@ -55,4 +57,22 @@ public class RegisterDriverVehiclesDtoService {
 
           return "Driver and Vehicle Registered Successfully!";
       }
+
+	public ResponseStructure<Driver> findDriver(long mobileNo) {
+		 Driver driver = driverRepo.findByMobileNo(mobileNo);
+		 ResponseStructure<Driver> rs =new ResponseStructure<Driver>();
+			
+			rs.setStatuscode(HttpStatus.FOUND.value());
+			rs.setMessage("Driver with monileNo " +mobileNo + "foundr succesfully");
+			rs.setData(driver);
+			return rs;
+			
+		
+	}
+
+      
+
+	
+
+     
   }

@@ -7,4 +7,6 @@ import com.quickmove.GoFaster.entity.Driver;
 @Repository
 public interface DriverRepository  extends JpaRepository<Driver, Long>  {
 
+	Driver findByMobileNo(long mobileNo);
+
 }
