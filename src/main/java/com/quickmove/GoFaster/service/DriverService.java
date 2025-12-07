@@ -1,12 +1,14 @@
 package com.quickmove.GoFaster.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.quickmove.GoFaster.dto.CurrentLocationDTO;
 import com.quickmove.GoFaster.entity.Driver;
 import com.quickmove.GoFaster.exception.DriverMobileNoNotFound;
 import com.quickmove.GoFaster.repository.DriverRepository;
+import com.quickmove.GoFaster.util.ResponseStructure;
 
 @Service
 public class DriverService {
@@ -43,5 +45,23 @@ public class DriverService {
 
         return driverRepository.save(driver);
     }
+
+	public ResponseStructure<Driver> findDriver(long mobileNo) {
+		 Driver driver = driverRepository.findByMobileNo(mobileNo);
+		 if(driver == null) {
+	            throw new DriverMobileNoNotFound();
+	        }
+		
+		 ResponseStructure<Driver> rs =new ResponseStructure<Driver>();
+			
+			rs.setStatuscode(HttpStatus.FOUND.value());
+			rs.setMessage("Driver with monileNo " +mobileNo + "found succesfully");
+			rs.setData(driver);
+			return rs;
+
+		
+	}
+
+	
 }
 
