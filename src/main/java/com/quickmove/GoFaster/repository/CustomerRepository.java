@@ -6,4 +6,6 @@ import com.quickmove.GoFaster.entity.Customer;
 
 public interface CustomerRepository extends JpaRepository<Customer, Long>{
 
+	Customer findByMobileNo(long mobileNo);
+
 }
