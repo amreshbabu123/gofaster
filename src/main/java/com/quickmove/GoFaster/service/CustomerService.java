@@ -39,4 +39,12 @@ public class CustomerService {
 		}
 
 
+
+
+		public Customer findByMobile(long mobileNo) {
+			  return customerRepo.findByMobileNo(mobileNo);
+
+		}
+
+
 }

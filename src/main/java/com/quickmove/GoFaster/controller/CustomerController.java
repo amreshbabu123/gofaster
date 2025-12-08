@@ -19,22 +19,29 @@ public class CustomerController {
 	@Autowired 
 	private CustomerService customerService;
 
-    @PostMapping("/register")
+    @PostMapping("/registercustomer")
     public ResponseStructure<Customer> register(@RequestBody CustomerDto dto) {
         Customer c = customerService.register(dto);
         return new ResponseStructure<>(HttpStatus.CREATED.value(), "Customer registered", c);
     }
     
-   
+
+    @GetMapping("/find")
+    public ResponseStructure<Customer> findCustomer(@RequestParam long mobileNo) {
+        Customer c = customerService.findByMobile(mobileNo);
+        if (c == null) return new ResponseStructure<>(HttpStatus.NOT_FOUND.value(), "Not found", null);
+        return new ResponseStructure<>(HttpStatus.FOUND.value(), "Customer found", c);
+    }
     
-   
-    @DeleteMapping("/delete/{mobileNo}")
+    @DeleteMapping("/deletecustomer/{mobileNo}")
     public ResponseStructure<String> deleteCustomer(@PathVariable long mobileNo){
     	boolean ok = customerService.deleteByMobile(mobileNo);
     	if (!ok) return new ResponseStructure<>(HttpStatus.NOT_FOUND.value(), "Customer not found", null);
     	return new ResponseStructure<>(HttpStatus.OK.value(), "Customer deleted", "deleted");
     	
     }
+
+
     
 
 

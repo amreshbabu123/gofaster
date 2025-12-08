@@ -18,6 +18,7 @@ public class Vehicle {
 	    private String vehiclecurrentCity;
 	    private String vehicleavailabilityStatus;
 	    private double pricePerKm;
+	    private int averageSpeed;
 		public Long getId() {
 			return id;
 		}
@@ -72,9 +73,16 @@ public class Vehicle {
 		public void setPricePerKm(double pricePerKm) {
 			this.pricePerKm = pricePerKm;
 		}
+		public int getAverageSpeed() {
+			return averageSpeed;
+		}
+		public void setAverageSpeed(int averageSpeed) {
+			this.averageSpeed = averageSpeed;
+		}
+
 		public Vehicle(Long id, String vehicleName, String vehicleNo, String vehicleType, String vehicleModel,
-				String vehiclecapaCity, String vehiclecurrentCity, String vehicleavailabilityStatus,
-				double pricePerKm) {
+				String vehiclecapaCity, String vehiclecurrentCity, String vehicleavailabilityStatus, double pricePerKm,
+				int averageSpeed) {
 			super();
 			this.id = id;
 			this.vehicleName = vehicleName;
@@ -85,6 +93,7 @@ public class Vehicle {
 			this.vehiclecurrentCity = vehiclecurrentCity;
 			this.vehicleavailabilityStatus = vehicleavailabilityStatus;
 			this.pricePerKm = pricePerKm;
+			this.averageSpeed = averageSpeed;
 		}
 		public Vehicle() {
 			super();
@@ -94,7 +103,6 @@ public class Vehicle {
 			return "Vehicle [id=" + id + ", vehicleName=" + vehicleName + ", vehicleNo=" + vehicleNo + ", vehicleType="
 					+ vehicleType + ", vehicleModel=" + vehicleModel + ", vehiclecapaCity=" + vehiclecapaCity
 					+ ", vehiclecurrentCity=" + vehiclecurrentCity + ", vehicleavailabilityStatus="
-					+ vehicleavailabilityStatus + ", pricePerKm=" + pricePerKm + "]";
+					+ vehicleavailabilityStatus + ", pricePerKm=" + pricePerKm + ", averageSpeed=" + averageSpeed + "]";
 		}
-	    
 }

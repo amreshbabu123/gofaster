@@ -29,7 +29,7 @@ public class DriverController {
              return driverService.updateCurrentVehicleLocation(mobileNo, dto);
 	        }
 	    
-	    @GetMapping("/driver")
+	    @GetMapping("/finddriverwithmobileno")
 	    public  ResponseStructure<Driver> findDriver(@RequestParam long mobileNo){
 	    	return driverService.findDriver(mobileNo);	
 	    }
