@@ -27,7 +27,7 @@ public class DriverService {
         return driver;
     }
     
-    public Driver updateCurrentVehicleLocation(Long mobileNo, CurrentLocationDTO dto) {
+    public Driver updateCurrentVehicleLocation(Long mobileNo, CurrentLocationDTO locationDto) {
 
         Driver driver = driverRepository.findByMobileNo(mobileNo);
 
@@ -35,12 +35,12 @@ public class DriverService {
             throw new RuntimeException("Driver Not Found with mobile: " + mobileNo);
         }
 
-        // Update latitude & longitude
-        driver.setLatitude(dto.getLatitude());
-        driver.setLongitude(dto.getLongitude());
+        
+        driver.setLatitude(locationDto.getLatitude());
+        driver.setLongitude(locationDto.getLongitude());
 
-        // Get address from LocationIQ
-        String address = locationIQService.getAddressFromCoordinates(dto.getLatitude(), dto.getLongitude());
+       
+        String address = locationIQService.getAddressFromCoordinates(locationDto.getLatitude(), locationDto.getLongitude());
         driver.setCurrentAddress(address);
 
         return driverRepository.save(driver);

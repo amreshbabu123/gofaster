@@ -15,13 +15,13 @@ public class CustomerService {
 	 @Autowired
 	    private CustomerRepository customerRepo;
 
-	    public Customer register(CustomerDto dto) {
+	    public Customer register(CustomerDto customerDto) {
 	        Customer c = new Customer();
-	        c.setName(dto.getName());
-	        c.setAge(dto.getAge());
-	        c.setGender(dto.getGender());
-	        c.setMobileNo(dto.getMobileNo());
-	        c.setEmailId(dto.getEmailId());
+	        c.setName(customerDto.getName());
+	        c.setAge(customerDto.getAge());
+	        c.setGender(customerDto.getGender());
+	        c.setMobileNo(customerDto.getMobileNo());
+	        c.setEmailId(customerDto.getEmailId());
 	        
 	        customerRepo.save(c);
 	        return c;

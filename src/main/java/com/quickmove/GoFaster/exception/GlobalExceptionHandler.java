@@ -19,5 +19,15 @@ public class GlobalExceptionHandler {
 
 	        return new ResponseEntity<>(stru, HttpStatus.NOT_FOUND);
 	    }
+	 
+	 @ExceptionHandler(DriverNotFoundException.class)
+	    public ResponseStructure<Object> handleDriverException(DriverNotFoundException ex) {
+	        return new ResponseStructure<>(404, ex.getMessage(), null);
+	    }
+	 
+	 @ExceptionHandler(CustomerNotFoundException.class)
+	    public ResponseStructure<Object> handleCustomerException(CustomerNotFoundException ex) {
+	        return new ResponseStructure<>(404, ex.getMessage(), null);
+	    }
 
 }

@@ -20,13 +20,13 @@ public class CustomerController {
 	private CustomerService customerService;
 
     @PostMapping("/registercustomer")
-    public ResponseStructure<Customer> register(@RequestBody CustomerDto dto) {
-        Customer c = customerService.register(dto);
+    public ResponseStructure<Customer> register(@RequestBody CustomerDto customerDto) {
+        Customer c = customerService.register(customerDto);
         return new ResponseStructure<>(HttpStatus.CREATED.value(), "Customer registered", c);
     }
     
 
-    @GetMapping("/find")
+    @GetMapping("/findcunstomerwithmobileno")
     public ResponseStructure<Customer> findCustomer(@RequestParam long mobileNo) {
         Customer c = customerService.findByMobile(mobileNo);
         if (c == null) return new ResponseStructure<>(HttpStatus.NOT_FOUND.value(), "Not found", null);

@@ -1,7 +1,6 @@
 package com.quickmove.GoFaster.dto;
 
 public class CustomerDto {
-	
 	private String name;
     private int age;
     private String gender;
@@ -9,8 +8,6 @@ public class CustomerDto {
     private String emailId;
     private double latitude;
     private double longitude;
-    
-    
 	public String getName() {
 		return name;
 	}
@@ -69,7 +66,5 @@ public class CustomerDto {
 		return "CustomerDto [name=" + name + ", age=" + age + ", gender=" + gender + ", mobileNo=" + mobileNo
 				+ ", emailId=" + emailId + ", latitude=" + latitude + ", longitude=" + longitude + "]";
 	}
-    
-
 
 }
