@@ -136,5 +136,5 @@ public class Booking {
 				+ destinationLocation + ", distanceTravelled=" + distanceTravelled + ", fare=" + fare
 				+ ", estimatedTimeRequired=" + estimatedTimeRequired + ", bookingDate=" + bookingDate + ", customer="
 				+ customer + ", driver=" + driver + ", payments=" + payments + "]";
-	} 
+	}
 }

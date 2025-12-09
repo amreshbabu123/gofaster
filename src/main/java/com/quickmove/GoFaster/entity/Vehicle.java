@@ -1,9 +1,14 @@
 package com.quickmove.GoFaster.entity;
 
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Vehicle {
@@ -18,7 +23,9 @@ public class Vehicle {
 	    private String vehiclecurrentCity;
 	    private String vehicleavailabilityStatus;
 	    private double pricePerKm;
-	    private int averageSpeed;
+	    private int averageSpeed=60;
+	    @OneToOne(cascade = CascadeType.ALL)
+	    private  Driver driver;
 		public Long getId() {
 			return id;
 		}
@@ -79,10 +86,15 @@ public class Vehicle {
 		public void setAverageSpeed(int averageSpeed) {
 			this.averageSpeed = averageSpeed;
 		}
-
+		public Driver getDriver() {
+			return driver;
+		}
+		public void setDriver(Driver driver) {
+			this.driver = driver;
+		}
 		public Vehicle(Long id, String vehicleName, String vehicleNo, String vehicleType, String vehicleModel,
 				String vehiclecapaCity, String vehiclecurrentCity, String vehicleavailabilityStatus, double pricePerKm,
-				int averageSpeed) {
+				int averageSpeed, Driver driver) {
 			super();
 			this.id = id;
 			this.vehicleName = vehicleName;
@@ -94,6 +106,7 @@ public class Vehicle {
 			this.vehicleavailabilityStatus = vehicleavailabilityStatus;
 			this.pricePerKm = pricePerKm;
 			this.averageSpeed = averageSpeed;
+			this.driver = driver;
 		}
 		public Vehicle() {
 			super();
@@ -103,6 +116,10 @@ public class Vehicle {
 			return "Vehicle [id=" + id + ", vehicleName=" + vehicleName + ", vehicleNo=" + vehicleNo + ", vehicleType="
 					+ vehicleType + ", vehicleModel=" + vehicleModel + ", vehiclecapaCity=" + vehiclecapaCity
 					+ ", vehiclecurrentCity=" + vehiclecurrentCity + ", vehicleavailabilityStatus="
-					+ vehicleavailabilityStatus + ", pricePerKm=" + pricePerKm + ", averageSpeed=" + averageSpeed + "]";
-		}
+					+ vehicleavailabilityStatus + ", pricePerKm=" + pricePerKm + ", averageSpeed=" + averageSpeed
+					+ ", driver=" + driver +"]";
+		}   
+	
 }
+		
+	    

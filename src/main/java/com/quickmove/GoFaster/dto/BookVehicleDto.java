@@ -7,7 +7,7 @@ public class BookVehicleDto {
     private String sourceLocation;
     private String destinationLocation;
 
-    // --- Getters & Setters ---
+   
     public String getCustomerMobileNo() {
         return customerMobileNo;
     }

@@ -1,6 +1,6 @@
 package com.quickmove.GoFaster.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowired; 
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -35,21 +35,18 @@ public class DriverService {
             throw new RuntimeException("Driver Not Found with mobile: " + mobileNo);
         }
 
-<<<<<<< HEAD
-        driver.setLatitude(dto.getLatitude());
-        driver.setLongitude(dto.getLongitude());
+        driver.setLatitude(locationDto.getLatitude());
+        driver.setLongitude(locationDto.getLongitude());
 
         // FIX: method now exists again
-        String address = locationIQService.getAddressFromCoordinates(dto.getLatitude(), dto.getLongitude());
-=======
+        String address = locationIQService.getAddressFromCoordinates(locationDto.getLatitude(), locationDto.getLongitude());
         
         driver.setLatitude(locationDto.getLatitude());
         driver.setLongitude(locationDto.getLongitude());
 
        
-        String address = locationIQService.getAddressFromCoordinates(locationDto.getLatitude(), locationDto.getLongitude());
->>>>>>> c5d25d84610952de76282d80bf3c9e20fbef9dcf
-        driver.setCurrentAddress(address);
+        String address1 = locationIQService.getAddressFromCoordinates(locationDto.getLatitude(), locationDto.getLongitude());
+        driver.setCurrentAddress(address1);
 
         return driverRepository.save(driver);
     }

@@ -1,22 +1,20 @@
 package com.quickmove.GoFaster.dto;
 
-import com.quickmove.GoFaster.entity.Vehicle;
-
 public class VehicleDetails {
 
-    private Vehicle vehicle;
+	private VehicleDto vehicle;
     private double fare;
     private double estimatedTime;
 
-    public Vehicle getVehicle() {
-        return vehicle;
-    }
+    public VehicleDto getVehicle() {
+		return vehicle;
+	}
 
-    public void setVehicle(Vehicle vehicle) {
-        this.vehicle = vehicle;
-    }
+	public void setVehicle1(VehicleDto vehicle) {
+		this.vehicle = vehicle;
+	}
 
-    public double getFare() {
+	public double getFare() {
         return fare;
     }
 
@@ -32,7 +30,7 @@ public class VehicleDetails {
         this.estimatedTime = estimatedTime;
     }
 
-    public VehicleDetails(Vehicle vehicle, double fare, double estimatedTime) {
+    public VehicleDetails(VehicleDto vehicle, double fare, double estimatedTime) {
         this.vehicle = vehicle;
         this.fare = fare;
         this.estimatedTime = estimatedTime;
@@ -41,9 +39,10 @@ public class VehicleDetails {
     public VehicleDetails() {
     }
 
-    @Override
-    public String toString() {
-        return "VehicleDetails [vehicle=" + vehicle + ", fare=" + fare + ", estimatedTime=" + estimatedTime + "]";
-    }
+	@Override
+	public String toString() {
+		return "VehicleDetails [vehicle=" + vehicle + ", fare=" + fare + ", estimatedTime=" + estimatedTime + "]";
+	}
+
 }
 

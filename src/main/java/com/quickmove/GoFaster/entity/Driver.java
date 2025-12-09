@@ -1,11 +1,14 @@
 package com.quickmove.GoFaster.entity;
 
 
+import java.util.List;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -28,10 +31,16 @@ public class Driver {
 	    
 	    @OneToOne(cascade = CascadeType.ALL)
 	    private Vehicle vehicle;
-
+	    @OneToMany(cascade = CascadeType.ALL)
+	    private List<Booking> bookingList;
 	    
-	    
-	    public Long getId() {
+		public List<Booking> getBookingList() {
+			return bookingList;
+		}
+		public void setBookingList(List<Booking> bookingList) {
+			this.bookingList = bookingList;
+		}
+		public Long getId() {
 			return id;
 		}
 		public void setId(Long id) {
@@ -109,10 +118,9 @@ public class Driver {
 		public void setCurrentAddress(String currentAddress) {
 			this.currentAddress = currentAddress;
 		}
-	
 		public Driver(Long id, String licenceNo, String upiId, String name, String status, int age, Long mobileNo,
-				String gender, String mailId, double latitude, double longitude, String currentAddress,
-				Vehicle vehicle) {
+				String gender, String mailId, double latitude, double longitude, String currentAddress, Vehicle vehicle,
+				List<Booking> bookingList) {
 			super();
 			this.id = id;
 			this.licenceNo = licenceNo;
@@ -127,6 +135,7 @@ public class Driver {
 			this.longitude = longitude;
 			this.currentAddress = currentAddress;
 			this.vehicle = vehicle;
+			this.bookingList = bookingList;
 		}
 		public Driver() {
 			super();
@@ -136,7 +145,9 @@ public class Driver {
 			return "Driver [id=" + id + ", licenceNo=" + licenceNo + ", upiId=" + upiId + ", name=" + name + ", status="
 					+ status + ", age=" + age + ", mobileNo=" + mobileNo + ", gender=" + gender + ", mailId=" + mailId
 					+ ", latitude=" + latitude + ", longitude=" + longitude + ", currentAddress=" + currentAddress
-					+ ", vehicle=" + vehicle + "]";
+					+ ", vehicle=" + vehicle + ", booking=" + bookingList + "]";
 		}
+	
+		
 		
 }

@@ -1,13 +1,24 @@
 package com.quickmove.GoFaster.dto;
 
+import jakarta.persistence.Column;
+
 public class VehicleDto {
+	   private Long id;
 	    private String vehicleName;
 	    private String vehicleNo;
 	    private String vehicleType;
 	    private String vehicleModel;
-	    private String vehicleCapacity;
+	    private String vehiclecapaCity;
+	    private String vehiclecurrentCity;
+	    private String vehicleavailabilityStatus;
 	    private double pricePerKm;
-	    private double averageSpeed;
+	    private int averageSpeed=60;
+		public Long getId() {
+			return id;
+		}
+		public void setId(Long id) {
+			this.id = id;
+		}
 		public String getVehicleName() {
 			return vehicleName;
 		}
@@ -32,11 +43,23 @@ public class VehicleDto {
 		public void setVehicleModel(String vehicleModel) {
 			this.vehicleModel = vehicleModel;
 		}
-		public String getVehicleCapacity() {
-			return vehicleCapacity;
+		public String getVehiclecapaCity() {
+			return vehiclecapaCity;
 		}
-		public void setVehicleCapacity(String vehicleCapacity) {
-			this.vehicleCapacity = vehicleCapacity;
+		public void setVehiclecapaCity(String vehiclecapaCity) {
+			this.vehiclecapaCity = vehiclecapaCity;
+		}
+		public String getVehiclecurrentCity() {
+			return vehiclecurrentCity;
+		}
+		public void setVehiclecurrentCity(String vehiclecurrentCity) {
+			this.vehiclecurrentCity = vehiclecurrentCity;
+		}
+		public String getVehicleavailabilityStatus() {
+			return vehicleavailabilityStatus;
+		}
+		public void setVehicleavailabilityStatus(String vehicleavailabilityStatus) {
+			this.vehicleavailabilityStatus = vehicleavailabilityStatus;
 		}
 		public double getPricePerKm() {
 			return pricePerKm;
@@ -44,12 +67,13 @@ public class VehicleDto {
 		public void setPricePerKm(double pricePerKm) {
 			this.pricePerKm = pricePerKm;
 		}
-		public double getAverageSpeed() {
+		public int getAverageSpeed() {
 			return averageSpeed;
 		}
-		public void setAverageSpeed(double averageSpeed) {
+		public void setAverageSpeed(int averageSpeed) {
 			this.averageSpeed = averageSpeed;
 		}
+	    
 	    
 	}
 

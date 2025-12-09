@@ -9,6 +9,7 @@ import com.quickmove.GoFaster.dto.BookVehicleDto;
 import com.quickmove.GoFaster.entity.Booking;
 import com.quickmove.GoFaster.entity.Customer;
 import com.quickmove.GoFaster.entity.Driver;
+import com.quickmove.GoFaster.entity.Vehicle;
 import com.quickmove.GoFaster.exception.CustomerNotFoundException;
 import com.quickmove.GoFaster.exception.DriverMobileNoNotFound;
 import com.quickmove.GoFaster.exception.DriverNotFoundException;
@@ -50,6 +51,11 @@ public class BookingService {
             booking.setFare(500.0);
 
             bookingRepo.save(booking);
+            customer.getBookingList().add(booking);
+            Vehicle vehicle= new Vehicle();
+            vehicle.getDriver().getBookingList().add(booking);
+            customerRepo.save(customer);
+            driverRepo.save(driver);
 
             return new ResponseStructure<>(201, "Booking created successfully", booking);
              
