@@ -12,34 +12,28 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.quickmove.GoFaster.dto.CustomerDto;
 import com.quickmove.GoFaster.entity.Customer;
+import com.quickmove.GoFaster.exception.CustomerNotFoundException;
 import com.quickmove.GoFaster.service.CustomerService;
 import com.quickmove.GoFaster.util.ResponseStructure;
 @RestController
 public class CustomerController {
-	@Autowired 
-	private CustomerService customerService;
+	 @Autowired 
+	    private CustomerService customerService;
 
-    @PostMapping("/registercustomer")
-    public ResponseStructure<Customer> register(@RequestBody CustomerDto customerDto) {
-        Customer c = customerService.register(customerDto);
-        return new ResponseStructure<>(HttpStatus.CREATED.value(), "Customer registered", c);
-    }
-    
+	    @PostMapping("/registercustomer")
+	    public ResponseStructure<Customer> register(@RequestBody CustomerDto customerDto) {
+	        return customerService.register(customerDto);
+	    }
 
-    @GetMapping("/findcunstomerwithmobileno")
-    public ResponseStructure<Customer> findCustomer(@RequestParam long mobileNo) {
-        Customer c = customerService.findByMobile(mobileNo);
-        if (c == null) return new ResponseStructure<>(HttpStatus.NOT_FOUND.value(), "Not found", null);
-        return new ResponseStructure<>(HttpStatus.FOUND.value(), "Customer found", c);
-    }
-    
-    @DeleteMapping("/deletecustomer/{mobileNo}")
-    public ResponseStructure<String> deleteCustomer(@PathVariable long mobileNo){
-    	boolean ok = customerService.deleteByMobile(mobileNo);
-    	if (!ok) return new ResponseStructure<>(HttpStatus.NOT_FOUND.value(), "Customer not found", null);
-    	return new ResponseStructure<>(HttpStatus.OK.value(), "Customer deleted", "deleted");
-    	
-    }
+	    @GetMapping("/findcustomerwithmobileno")
+	    public ResponseStructure<Customer> findCustomer(@RequestParam long mobileNo)  {
+	        return customerService.findByMobile(mobileNo);
+	    }
+
+	    @DeleteMapping("/deletecustomer/{mobileNo}")
+	    public ResponseStructure<String> deleteCustomer(@PathVariable long mobileNo) {
+	        return customerService.deleteByMobile(mobileNo);
+	    }
 
 
     

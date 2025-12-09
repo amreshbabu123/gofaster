@@ -15,36 +15,54 @@ public class CustomerService {
 	 @Autowired
 	    private CustomerRepository customerRepo;
 
-	    public Customer register(CustomerDto customerDto) {
+	    public ResponseStructure<Customer> register(CustomerDto dto) {
+
 	        Customer c = new Customer();
-	        c.setName(customerDto.getName());
-	        c.setAge(customerDto.getAge());
-	        c.setGender(customerDto.getGender());
-	        c.setMobileNo(customerDto.getMobileNo());
-	        c.setEmailId(customerDto.getEmailId());
-	        
+	        c.setName(dto.getName());
+	        c.setAge(dto.getAge());
+	        c.setGender(dto.getGender());
+	        c.setMobileNo(dto.getMobileNo());
+	        c.setEmailId(dto.getEmailId());
+
 	        customerRepo.save(c);
-	        return c;
+
+	        return new ResponseStructure<>(
+	                HttpStatus.CREATED.value(),
+	                "Customer registered successfully",
+	                c
+	        );
 	    }
 
-	    
+	    public ResponseStructure<Customer> findByMobile(long mobileNo) {
 
+	        Customer c = customerRepo.findByMobileNo(mobileNo);
 
-		public boolean deleteByMobile(long mobileNo) {
-			 Customer c = customerRepo.findByMobileNo(mobileNo);
-		        if (c == null) return false;
-		        customerRepo.delete(c);
-		        return true;
+	        if (c == null) {
+	            throw new CustomerNotFoundException("Customer not found: " + mobileNo);
+	        }
 
-		}
+	        return new ResponseStructure<>(
+	                HttpStatus.OK.value(),
+	                "Customer found",
+	                c
+	        );
+	    }
 
+	    public ResponseStructure<String> deleteByMobile(long mobileNo)  {
 
+	        Customer c = customerRepo.findByMobileNo(mobileNo);
 
+	        if (c == null)
+	            throw new CustomerNotFoundException("Customer not found with mobile: " + mobileNo);
 
-		public Customer findByMobile(long mobileNo) {
-			  return customerRepo.findByMobileNo(mobileNo);
+	        customerRepo.delete(c);
 
-		}
+	        return new ResponseStructure<>(
+	                HttpStatus.OK.value(),
+	                "Customer deleted successfully",
+	                "deleted"
+	        );
+	    }
 
 
 }
