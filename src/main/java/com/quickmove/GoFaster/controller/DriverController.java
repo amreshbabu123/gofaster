@@ -25,8 +25,8 @@ public class DriverController {
 	    }
 
 	    @PutMapping("/updatecurrentvechiclelocation/{mobileNo}")
-	    public Driver updateLocation(@PathVariable Long mobileNo,@RequestBody CurrentLocationDTO dto) {
-             return driverService.updateCurrentVehicleLocation(mobileNo, dto);
+	    public Driver updateLocation(@PathVariable Long mobileNo,@RequestBody CurrentLocationDTO locationDto) {
+             return driverService.updateCurrentVehicleLocation(mobileNo, locationDto);
 	        }
 	    
 	    @GetMapping("/finddriverwithmobileno")

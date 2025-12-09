@@ -17,25 +17,25 @@ public class RegisterDriverVehiclesDtoService {
 	    @Autowired
 	    private VehicleRepository vehicleRepo;
 
-	    public Driver saveRegisterDriverVehiclesDto(RegisterDriverVehiclesDto dto) {
+	    public Driver saveRegisterDriverVehiclesDto(RegisterDriverVehiclesDto registerDriverVehicleDto) {
 
 	        Vehicle vehicle = new Vehicle();
-	        vehicle.setVehicleName(dto.getVehicleName());
-	        vehicle.setVehicleNo(String.valueOf(dto.getVehicleNo()));
-	        vehicle.setVehicleType(dto.getVehicleType());
-	        vehicle.setVehiclecapaCity(dto.getVehicleCapacity());
-	        vehicle.setPricePerKm(dto.getPricePerKm());
+	        vehicle.setVehicleName(registerDriverVehicleDto.getVehicleName());
+	        vehicle.setVehicleNo(String.valueOf(registerDriverVehicleDto.getVehicleNo()));
+	        vehicle.setVehicleType(registerDriverVehicleDto.getVehicleType());
+	        vehicle.setVehiclecapaCity(registerDriverVehicleDto.getVehicleCapacity());
+	        vehicle.setPricePerKm(registerDriverVehicleDto.getPricePerKm());
 
 	        vehicleRepo.save(vehicle);
 
 	        Driver driver = new Driver();
-	        driver.setLicenceNo(String.valueOf(dto.getLicenceNo()));
-	        driver.setUpiId(String.valueOf(dto.getUpiId()));
-	        driver.setName(dto.getDriverName());
-	        driver.setAge(dto.getAge());
-	        driver.setMobileNo(dto.getMobileNumber());
-	        driver.setGender(String.valueOf(dto.getGender()));
-	        driver.setMailId(dto.getMailId());
+	        driver.setLicenceNo(String.valueOf(registerDriverVehicleDto.getLicenceNo()));
+	        driver.setUpiId(String.valueOf(registerDriverVehicleDto.getUpiId()));
+	        driver.setName(registerDriverVehicleDto.getDriverName());
+	        driver.setAge(registerDriverVehicleDto.getAge());
+	        driver.setMobileNo(registerDriverVehicleDto.getMobileNumber());
+	        driver.setGender(String.valueOf(registerDriverVehicleDto.getGender()));
+	        driver.setMailId(registerDriverVehicleDto.getMailId());
 	        driver.setVehicle(vehicle);
 
 	        return driverRepo.save(driver);
