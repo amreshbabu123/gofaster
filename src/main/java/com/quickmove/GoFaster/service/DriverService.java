@@ -35,21 +35,20 @@ public class DriverService {
             throw new RuntimeException("Driver Not Found with mobile: " + mobileNo);
         }
 
-        driver.setLatitude(locationDto.getLatitude());
-        driver.setLongitude(locationDto.getLongitude());
+        double lat = locationDto.getLatitude();
+        double lon = locationDto.getLongitude();
 
-        // FIX: method now exists again
-        String address = locationIQService.getAddressFromCoordinates(locationDto.getLatitude(), locationDto.getLongitude());
-        
-        driver.setLatitude(locationDto.getLatitude());
-        driver.setLongitude(locationDto.getLongitude());
+        // Update location
+        driver.setLatitude(lat);
+        driver.setLongitude(lon);
 
-       
-        String address1 = locationIQService.getAddressFromCoordinates(locationDto.getLatitude(), locationDto.getLongitude());
-        driver.setCurrentAddress(address1);
+        // Get human-readable address
+        String address = locationIQService.getAddressFromCoordinates(lat, lon);
+        driver.setCurrentAddress(address);
 
         return driverRepository.save(driver);
     }
+
 
 
 	public ResponseStructure<Driver> findDriver(long mobileNo) {

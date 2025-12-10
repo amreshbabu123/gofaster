@@ -1,7 +1,5 @@
 package com.quickmove.GoFaster.dto;
 
-import jakarta.persistence.Column;
-
 public class VehicleDto {
 	   private Long id;
 	    private String vehicleName;
@@ -10,9 +8,9 @@ public class VehicleDto {
 	    private String vehicleModel;
 	    private String vehiclecapaCity;
 	    private String vehiclecurrentCity;
-	    private String vehicleavailabilityStatus;
+	    private String vehicleavailabilityStatus="Available";
 	    private double pricePerKm;
-	    private int averageSpeed=60;
+	    private int averageSpeed;
 		public Long getId() {
 			return id;
 		}

@@ -1,5 +1,7 @@
 package com.quickmove.GoFaster.service;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -7,9 +9,6 @@ import org.springframework.web.client.RestTemplate;
 
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
-
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 @Service
 public class LocationIQService {
@@ -20,51 +19,36 @@ public class LocationIQService {
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper mapper = new ObjectMapper();
 
-    // ------------------------ DISTANCE CALCULATION ------------------------
-    public double getDistance(String source, String destination) {
+    // Get coordinates for a given city
+    public double[] getCoordinates(String city) {
         try {
-            String src = URLEncoder.encode(source, StandardCharsets.UTF_8);
-            String dest = URLEncoder.encode(destination, StandardCharsets.UTF_8);
+            String q = URLEncoder.encode(city, StandardCharsets.UTF_8);
 
-            // SOURCE COORDINATES
-            String sUrl = "https://us1.locationiq.com/v1/search?key=" + apiKey +
-                    "&q=" + src + "&format=json";
+            String url = "https://us1.locationiq.com/v1/search?key=" + apiKey +
+                    "&q=" + q + "&format=json&limit=1";
 
-            JsonNode sNode = mapper.readTree(restTemplate.getForObject(sUrl, String.class)).get(0);
-            double sLat = sNode.get("lat").asDouble();
-            double sLon = sNode.get("lon").asDouble();
+            JsonNode node = mapper.readTree(restTemplate.getForObject(url, String.class)).get(0);
 
-            // DESTINATION COORDINATES
-            String dUrl = "https://us1.locationiq.com/v1/search?key=" + apiKey +
-                    "&q=" + dest + "&format=json";
+            double lat = node.get("lat").asDouble();
+            double lon = node.get("lon").asDouble();
 
-            JsonNode dNode = mapper.readTree(restTemplate.getForObject(dUrl, String.class)).get(0);
-            double dLat = dNode.get("lat").asDouble();
-            double dLon = dNode.get("lon").asDouble();
-
-            // DRIVING DISTANCE
-            String disUrl = "https://us1.locationiq.com/v1/directions/driving/" +
-                    sLon + "," + sLat + ";" + dLon + "," + dLat +
-                    "?key=" + apiKey;
-
-            JsonNode result = mapper.readTree(restTemplate.getForObject(disUrl, String.class));
-
-            double meters = result.get("routes").get(0).get("distance").asDouble();
-            return meters / 1000; // KM
+            return new double[]{lat, lon};
 
         } catch (Exception e) {
-            System.err.println("Distance API Error: " + e.getMessage());
-            return 0;
+            System.err.println("Coordinates Error: " + e.getMessage());
+            return new double[]{0, 0};
         }
     }
 
-    // ------------------------ REVERSE GEOCODING ------------------------
+    // Reverse geocoding
     public String getAddressFromCoordinates(double lat, double lon) {
         try {
-            String url = "https://us1.locationiq.com/v1/reverse?key=" + apiKey +
+            String url =
+                    "https://us1.locationiq.com/v1/reverse?key=" + apiKey +
                     "&lat=" + lat + "&lon=" + lon + "&format=json";
 
             JsonNode response = mapper.readTree(restTemplate.getForObject(url, String.class));
+
             return response.get("display_name").asText();
 
         } catch (Exception e) {
@@ -72,4 +56,5 @@ public class LocationIQService {
             return "Unknown Location";
         }
     }
+    
 }

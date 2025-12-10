@@ -6,7 +6,12 @@ import com.quickmove.GoFaster.entity.Vehicle;
 
 public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
-    List<Vehicle> findByVehiclecurrentCity(String city);
+	List<Vehicle> findByVehicleavailabilityStatus(String string);
+
+	List<Vehicle> findByVehiclecurrentCityIgnoreCase(String sourceCity);
+
+	
+
 
 }
 

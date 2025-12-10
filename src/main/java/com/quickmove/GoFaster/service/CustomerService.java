@@ -23,7 +23,9 @@ public class CustomerService {
 	        c.setGender(dto.getGender());
 	        c.setMobileNo(dto.getMobileNo());
 	        c.setEmailId(dto.getEmailId());
-
+	        c.setLatitude(dto.getLatitude());
+	        c.setLongitude(dto.getLongitude());
+            c.setCurrentLocation("hyderabad");
 	        customerRepo.save(c);
 
 	        return new ResponseStructure<>(

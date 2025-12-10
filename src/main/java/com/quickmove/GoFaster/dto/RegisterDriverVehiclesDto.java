@@ -13,7 +13,6 @@ public class RegisterDriverVehiclesDto {
 	private String vehicleName;
 	private String vehicleNo;
 	private String vehicleType;
-	
 	private String vehicleCapacity;
 	private double latitude;
 	private double longitude;

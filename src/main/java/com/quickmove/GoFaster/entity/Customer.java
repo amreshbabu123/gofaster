@@ -20,12 +20,12 @@ public class Customer {
 	    private String gender;
 	    private Long mobileNo;
 	    private String emailId;
+	    private double latitude;
+	    private double longitude;
 	    private String currentLocation;
         // Customer has multiple bookings
 	    @OneToMany(cascade = CascadeType.ALL)
 	    private List<Booking> bookingList;
-	    
-	    
 		public Long getId() {
 			return id;
 		}
@@ -62,6 +62,21 @@ public class Customer {
 		public void setEmailId(String emailId) {
 			this.emailId = emailId;
 		}
+		public double getLatitude() {
+		    return latitude;
+		}
+
+		public void setLatitude(double latitude) {
+		    this.latitude = latitude;
+		}
+
+		public double getLongitude() {
+		    return longitude;
+		}
+
+		public void setLongitude(double longitude) {
+		    this.longitude = longitude;
+		}
 		public String getCurrentLocation() {
 			return currentLocation;
 		}
@@ -74,8 +89,8 @@ public class Customer {
 		public void setBookingList(List<Booking> bookingList) {
 			this.bookingList = bookingList;
 		}
-		public Customer(Long id, String name, int age, String gender, Long mobileNo, String emailId,
-				String currentLocation, List<Booking> bookingList) {
+		public Customer(Long id, String name, int age, String gender, Long mobileNo, String emailId, double latitude,
+				double longitude, String currentLocation, List<Booking> bookingList) {
 			super();
 			this.id = id;
 			this.name = name;
@@ -83,6 +98,8 @@ public class Customer {
 			this.gender = gender;
 			this.mobileNo = mobileNo;
 			this.emailId = emailId;
+			this.latitude = latitude;
+			this.longitude = longitude;
 			this.currentLocation = currentLocation;
 			this.bookingList = bookingList;
 		}
@@ -92,8 +109,7 @@ public class Customer {
 		@Override
 		public String toString() {
 			return "Customer [id=" + id + ", name=" + name + ", age=" + age + ", gender=" + gender + ", mobileNo="
-					+ mobileNo + ", emailId=" + emailId + ", currentLocation=" + currentLocation + ", bookingList="
-					+ bookingList + "]";
+					+ mobileNo + ", emailId=" + emailId + ", latitude=" + latitude + ", longitude=" + longitude
+					+ ", currentLocation=" + currentLocation + ", bookingList=" + bookingList + "]";
 		}
-
 }

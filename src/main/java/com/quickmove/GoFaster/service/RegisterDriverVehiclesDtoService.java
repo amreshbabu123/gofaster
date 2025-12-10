@@ -36,6 +36,8 @@ public class RegisterDriverVehiclesDtoService {
 	        driver.setMobileNo(registerDriverVehicleDto.getMobileNumber());
 	        driver.setGender(String.valueOf(registerDriverVehicleDto.getGender()));
 	        driver.setMailId(registerDriverVehicleDto.getMailId());
+	        driver.setLatitude(registerDriverVehicleDto.getLatitude());
+	        driver.setLongitude(registerDriverVehicleDto.getLongitude());
 	        driver.setVehicle(vehicle);
 
 	        return driverRepo.save(driver);
