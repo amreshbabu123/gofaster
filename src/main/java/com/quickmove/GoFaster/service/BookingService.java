@@ -42,30 +42,94 @@ public class BookingService {
 
     	Driver driver = driverRepo.findByMobileNo(
     	        bookVehicleDto.getDriverMobileNo());
-
+    	
     	if (driver == null) {
     	    throw new DriverMobileNoNotFound("Driver not found");
     	}
 
-        Booking booking = new Booking();
-        booking.setCustomer(customer);
-        booking.setDriver(driver);
-        booking.setSourceLocation(bookVehicleDto.getSourceLocation());
-        booking.setDestinationLocation(bookVehicleDto.getDestinationLocation());
-        booking.setBookingDate(LocalDateTime.now());
-        booking.setDistanceTravelled(10.0);
-        booking.setFare(500.0);
 
-        customer.getBookingList().add(booking);
-        driver.getBookingList().add(booking);
+            Booking booking = new Booking();
+            String status=driver.getStatus();
+            System.err.println(status);
+            
+            if(status.equalsIgnoreCase("booked")) {
+            	throw new DriverMobileNoNotFound(status);
+            }
+            booking.setCustomer(customer);
+            booking.setDriver(driver);
+            booking.setSourceLocation(bookVehicleDto.getSourceLocation());
+            booking.setDestinationLocation(bookVehicleDto.getDestinationLocation());
+            booking.setBookingDate(LocalDateTime.now());
+            booking.setDistanceTravelled(10.0);
+            booking.setFare(500.0);
 
-        bookingRepo.save(booking);
+            
+            customer.getBookingList().add(booking);
+            driver.getBookingList().add(booking);
 
-        ResponseStructure<Booking> response = new ResponseStructure<>();
-        response.setStatuscode(HttpStatus.CREATED.value());
-        response.setMessage("Booking created successfully");
-        response.setData(booking);
+            bookingRepo.save(booking);
+            
+            driver.setStatus("booked");
+            driver.getVehicle().setVehicleavailabilityStatus("booked");
 
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
-    }
+           
+            customerRepo.save(customer);
+            driverRepo.save(driver);
+
+
+            ResponseStructure<Booking> response = new ResponseStructure<>();
+            response.setStatuscode(HttpStatus.CREATED.value());
+            response.setMessage("Booking created successfully");
+            response.setData(booking);
+
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+             
+            
+        }
+
+
+		public ResponseStructure<Booking> activeBooking(long mobileNo) {
+			ResponseStructure<Booking> structure = new ResponseStructure<>();
+
+		    Booking active = bookingRepo.findActiveBooking(mobileNo);
+
+		    if (active == null) {
+		        structure.setStatuscode(404);
+		        structure.setMessage("No active booking found for this customer");
+		        structure.setData(null);
+		        return structure;
+		    }
+
+		    structure.setStatuscode(200);
+		    structure.setMessage("Active booking fetched successfully");
+		    structure.setData(active);
+
+		    return structure;
+			
+		}
+
+
+		public ResponseStructure<Booking> driverActiveBooking(long mobileNo) {
+			ResponseStructure<Booking> structure = new ResponseStructure<>();
+
+		    Booking active = bookingRepo.findDriverActiveBooking(mobileNo);
+
+		    if (active == null) {
+		        structure.setStatuscode(404);
+		        structure.setMessage("No active booking found for this customer");
+		        structure.setData(null);
+		        return structure;
+		    }
+
+		    structure.setStatuscode(200);
+		    structure.setMessage("Active booking fetched successfully");
+		    structure.setData(active);
+
+		    return structure;
+			
+		
+			
+		}
+    
+    	
 }

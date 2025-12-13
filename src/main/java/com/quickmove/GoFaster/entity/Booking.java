@@ -2,7 +2,18 @@ package com.quickmove.GoFaster.entity;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+
 import jakarta.persistence.*;
+
 
 @Entity
 public class Booking {
@@ -22,6 +33,7 @@ public class Booking {
 
 
     @ManyToOne
+   @JsonIgnore
     private Customer customer;   // Many bookings → One customer
 
     @ManyToOne
