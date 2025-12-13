@@ -7,6 +7,8 @@ public class BookVehicleDto {
     private String sourceLocation;
     private String destinationLocation;
 
+    
+    
     public String getCustomerMobileNo() {
         return customerMobileNo;
     }

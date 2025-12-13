@@ -30,22 +30,19 @@ public class BookingService {
     @Autowired 
     private BookingRepository bookingRepo;
 
-    public ResponseEntity<ResponseStructure<Booking>> bookVehicle(
-            BookVehicleDto bookVehicleDto) {
+    public ResponseEntity<ResponseStructure<Booking>> bookVehicle(BookVehicleDto bookVehicleDto) {
 
-    	Customer customer = customerRepo.findByMobileNo(
-    	        Long.parseLong(bookVehicleDto.getCustomerMobileNo()));
+        Customer customer = customerRepo.findByMobileNo(
+                Long.parseLong(bookVehicleDto.getCustomerMobileNo()));
+        Driver driver = driverRepo.findByMobileNo(bookVehicleDto.getDriverMobileNo());
 
-    	if (customer == null) {
-    	    throw new CustomerNotFoundException("Customer not found");
-    	}
+        if (customer == null) {
+            throw new CustomerNotFoundException("Customer not found");
+        }
 
-    	Driver driver = driverRepo.findByMobileNo(
-    	        bookVehicleDto.getDriverMobileNo());
-
-    	if (driver == null) {
-    	    throw new DriverMobileNoNotFound("Driver not found");
-    	}
+        if (driver == null) {
+            throw new DriverMobileNoNotFound("Driver not found");
+        }
 
         Booking booking = new Booking();
         booking.setCustomer(customer);
@@ -68,4 +65,5 @@ public class BookingService {
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
 }
