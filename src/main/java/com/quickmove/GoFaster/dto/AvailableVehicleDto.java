@@ -49,7 +49,6 @@ public class AvailableVehicleDto {
     public void setAvailableVehicles(List<VehicleDetails> availableVehicles) {
         this.availableVehicles = availableVehicles;
     }
-
     public AvailableVehicleDto(CustomerDto customer, double distance, String source, String destination,
                                List<VehicleDetails> availableVehicles) {
         this.customer = customer;

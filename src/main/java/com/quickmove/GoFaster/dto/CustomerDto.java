@@ -1,13 +1,15 @@
 package com.quickmove.GoFaster.dto;
 
 public class CustomerDto {
+	
 	private String name;
-    private int age;
-    private String gender;
-    private long mobileNo;
-    private String emailId;
-    private double latitude;
-    private double longitude;
+	private int age;
+	private String gender;
+	private long mobileNo;
+	private String emailId;
+	private double latitude;
+	private double longitude;
+	
 	public String getName() {
 		return name;
 	}
@@ -49,25 +51,6 @@ public class CustomerDto {
 	}
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
-	}
-	public CustomerDto(String name, int age, String gender, long mobileNo, String emailId, double latitude,
-			double longitude) {
-		super();
-		this.name = name;
-		this.age = age;
-		this.gender = gender;
-		this.mobileNo = mobileNo;
-		this.emailId = emailId;
-		this.latitude = latitude;
-		this.longitude = longitude;
-	}
-	public CustomerDto() {
-		super();
-	}
-	@Override
-	public String toString() {
-		return "CustomerDto [name=" + name + ", age=" + age + ", gender=" + gender + ", mobileNo=" + mobileNo
-				+ ", emailId=" + emailId + ", latitude=" + latitude + ", longitude=" + longitude + "]";
 	}
 
 }
