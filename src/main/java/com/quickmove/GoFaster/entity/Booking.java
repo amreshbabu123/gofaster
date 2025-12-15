@@ -2,7 +2,18 @@ package com.quickmove.GoFaster.entity;
 
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+
 import jakarta.persistence.*;
+
 
 @Entity
 public class Booking {
@@ -17,11 +28,12 @@ public class Booking {
     private double fare;
     private String estimatedTimeRequired;
     private LocalDateTime bookingDate;
-
+    private String bookingStatus; // ACTIVE, COMPLETED, CANCELLED
     private String paymentStatus = "not paid";
 
 
     @ManyToOne
+   @JsonIgnore
     private Customer customer;   // Many bookings → One customer
 
     @ManyToOne
@@ -89,8 +101,23 @@ public class Booking {
     public void setBookingDate(LocalDateTime bookingDate) {
         this.bookingDate = bookingDate;
     }
+    public String getBookingStatus() {
+		return bookingStatus;
+	}
 
-    public Customer getCustomer() {
+	public void setBookingStatus(String bookingStatus) {
+		this.bookingStatus = bookingStatus;
+	}
+
+	public String getPaymentStatus() {
+		return paymentStatus;
+	}
+
+	public void setPaymentStatus(String paymentStatus) {
+		this.paymentStatus = paymentStatus;
+	}
+
+	public Customer getCustomer() {
         return customer;
     }
 
@@ -123,8 +150,8 @@ public class Booking {
     }
 
 	public Booking(Long id, String sourceLocation, String destinationLocation, double distanceTravelled, double fare,
-			String estimatedTimeRequired, LocalDateTime bookingDate, String paymentStatus, Customer customer,
-			Driver driver, Vehicle vehicle, Payments payment) {
+			String estimatedTimeRequired, LocalDateTime bookingDate, String bookingStatus, String paymentStatus,
+			Customer customer, Driver driver, Vehicle vehicle, Payments payment) {
 		super();
 		this.id = id;
 		this.sourceLocation = sourceLocation;
@@ -133,6 +160,7 @@ public class Booking {
 		this.fare = fare;
 		this.estimatedTimeRequired = estimatedTimeRequired;
 		this.bookingDate = bookingDate;
+		this.bookingStatus = bookingStatus;
 		this.paymentStatus = paymentStatus;
 		this.customer = customer;
 		this.driver = driver;
@@ -149,8 +177,8 @@ public class Booking {
 		return "Booking [id=" + id + ", sourceLocation=" + sourceLocation + ", destinationLocation="
 				+ destinationLocation + ", distanceTravelled=" + distanceTravelled + ", fare=" + fare
 				+ ", estimatedTimeRequired=" + estimatedTimeRequired + ", bookingDate=" + bookingDate
-				+ ", paymentStatus=" + paymentStatus + ", customer=" + customer + ", driver=" + driver + ", vehicle="
-				+ vehicle + ", payment=" + payment + "]";
+				+ ", bookingStatus=" + bookingStatus + ", paymentStatus=" + paymentStatus + ", customer=" + customer
+				+ ", driver=" + driver + ", vehicle=" + vehicle + ", payment=" + payment + "]";
 	}
     
 }

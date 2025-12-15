@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.quickmove.GoFaster.dto.BookingHistoryDto;
 import com.quickmove.GoFaster.dto.CurrentLocationDTO;
 import com.quickmove.GoFaster.entity.Driver;
 import com.quickmove.GoFaster.service.DriverService;
@@ -35,8 +36,9 @@ public class DriverController {
 	    	return driverService.findDriver(mobileNo);	
 	    }
 
-	    
-	   
-
-  }
+	    @GetMapping("/driver/seeallbookinghistorywithmobileno")
+	    public ResponseEntity<ResponseStructure<BookingHistoryDto>> getDriverBookingHistory(@RequestParam Long mobileNo) {
+            return driverService.getDriverBookingHistoryByMobile(mobileNo);
+	    }
+}
 

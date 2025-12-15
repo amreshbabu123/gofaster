@@ -6,7 +6,6 @@ public class BookVehicleDto {
     private Long driverMobileNo;
     private String sourceLocation;
     private String destinationLocation;
-
     
     
     public String getCustomerMobileNo() {

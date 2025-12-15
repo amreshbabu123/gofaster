@@ -26,6 +26,8 @@ public class Customer {
         // Customer has multiple bookings
 	    @OneToMany(cascade = CascadeType.ALL)
 	    private List<Booking> bookingList;
+	    private boolean activeBookingFlag = false;
+
 		public Long getId() {
 			return id;
 		}
@@ -89,8 +91,15 @@ public class Customer {
 		public void setBookingList(List<Booking> bookingList) {
 			this.bookingList = bookingList;
 		}
+		public boolean isActiveBookingFlag() {
+	        return activeBookingFlag;
+	    }
+
+	    public void setActiveBookingFlag(boolean activeBookingFlag) {
+	        this.activeBookingFlag = activeBookingFlag;
+	    }
 		public Customer(Long id, String name, int age, String gender, Long mobileNo, String emailId, double latitude,
-				double longitude, String currentLocation, List<Booking> bookingList) {
+				double longitude, String currentLocation, List<Booking> bookingList, boolean activeBookingFlag) {
 			super();
 			this.id = id;
 			this.name = name;
@@ -102,6 +111,7 @@ public class Customer {
 			this.longitude = longitude;
 			this.currentLocation = currentLocation;
 			this.bookingList = bookingList;
+			this.activeBookingFlag = activeBookingFlag;
 		}
 		public Customer() {
 			super();
@@ -110,6 +120,7 @@ public class Customer {
 		public String toString() {
 			return "Customer [id=" + id + ", name=" + name + ", age=" + age + ", gender=" + gender + ", mobileNo="
 					+ mobileNo + ", emailId=" + emailId + ", latitude=" + latitude + ", longitude=" + longitude
-					+ ", currentLocation=" + currentLocation + ", bookingList=" + bookingList + "]";
+					+ ", currentLocation=" + currentLocation + ", bookingList=" + bookingList + ", activeBookingFlag="
+					+ activeBookingFlag + "]";
 		}
 }

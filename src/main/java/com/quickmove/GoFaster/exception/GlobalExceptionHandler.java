@@ -34,4 +34,13 @@ public class GlobalExceptionHandler {
         response.setData(drivernot.getMessage());
         return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
     }
+    @ExceptionHandler(BookingNotFoundException.class)
+    public ResponseEntity<ResponseStructure<String>> handleBookingNotFound(BookingNotFoundException ex) {
+        ResponseStructure<String> response = new ResponseStructure<>();
+        response.setStatuscode(HttpStatus.NOT_FOUND.value());
+        response.setMessage("Booking id is not found");
+        response.setData(ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
+    }
+
 }

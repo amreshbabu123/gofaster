@@ -1,12 +1,18 @@
 package com.quickmove.GoFaster.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.quickmove.GoFaster.dto.BookingHistoryDto;
 import com.quickmove.GoFaster.dto.CustomerDto;
+import com.quickmove.GoFaster.dto.RideDetailsDto;
+import com.quickmove.GoFaster.entity.Booking;
 import com.quickmove.GoFaster.entity.Customer;
 import com.quickmove.GoFaster.exception.CustomerNotFoundException;
 import com.quickmove.GoFaster.repository.CustomerRepository;
@@ -76,4 +82,50 @@ public class CustomerService {
 		    return new ResponseEntity<>(response, HttpStatus.OK);
 		}
 
+	
+	
+	public ResponseEntity<ResponseStructure<BookingHistoryDto>> getCustomerBookingHistoryByMobile(Long mobileNo) {
+
+		Customer customer = customerRepo.findByMobileNo(mobileNo);
+		if (customer == null) {
+		    throw new RuntimeException("Customer not found");
+		}
+
+        List<Booking> bookings = customer.getBookingList();
+
+        if (bookings == null || bookings.isEmpty()) {
+            throw new RuntimeException("No booking history found");
+        }
+
+        List<RideDetailsDto> history = new ArrayList<>();
+        double totalAmount = 0;
+
+        for (Booking booking : bookings) {
+
+            // Optional: show only COMPLETED rides
+            if (!"COMPLETED".equalsIgnoreCase(booking.getBookingStatus())) {
+                continue;
+            }
+
+            RideDetailsDto ride = new RideDetailsDto();
+            ride.setFromLocation(booking.getSourceLocation());
+            ride.setToLocation(booking.getDestinationLocation());
+            ride.setDistance(booking.getDistanceTravelled());
+            ride.setFare(booking.getFare());
+
+            history.add(ride);
+            totalAmount += booking.getFare();
+        }
+
+        BookingHistoryDto dto = new BookingHistoryDto();
+        dto.setHistory(history);
+        dto.setToatalAmount(totalAmount);
+
+        ResponseStructure<BookingHistoryDto> response = new ResponseStructure<>();
+        response.setStatuscode(HttpStatus.OK.value());
+        response.setMessage("Customer booking history fetched successfully");
+        response.setData(dto);
+
+        return ResponseEntity.ok(response);
+    }
 }
