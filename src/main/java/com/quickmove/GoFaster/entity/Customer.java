@@ -2,6 +2,8 @@ package com.quickmove.GoFaster.entity;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,10 +26,15 @@ public class Customer {
 	    private double longitude;
 	    private String currentLocation;
         // Customer has multiple bookings
-	    @OneToMany(cascade = CascadeType.ALL)
+	    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+	    @JsonIgnore
 	    private List<Booking> bookingList;
-	    private boolean activeBookingFlag = false;
 
+	    private boolean activeBookingFlag = false;
+	    
+	    private Double penalty=(double) 0;
+
+	    
 		public Long getId() {
 			return id;
 		}
@@ -98,8 +105,18 @@ public class Customer {
 	    public void setActiveBookingFlag(boolean activeBookingFlag) {
 	        this.activeBookingFlag = activeBookingFlag;
 	    }
+	    
+	    
+		public Double getPenalty() {
+			return penalty;
+		}
+		public void setPenalty(Double penalty) {
+			this.penalty = penalty;
+		}
+		
 		public Customer(Long id, String name, int age, String gender, Long mobileNo, String emailId, double latitude,
-				double longitude, String currentLocation, List<Booking> bookingList, boolean activeBookingFlag) {
+				double longitude, String currentLocation, List<Booking> bookingList, boolean activeBookingFlag,
+				Double penalty) {
 			super();
 			this.id = id;
 			this.name = name;
@@ -112,6 +129,7 @@ public class Customer {
 			this.currentLocation = currentLocation;
 			this.bookingList = bookingList;
 			this.activeBookingFlag = activeBookingFlag;
+			this.penalty = penalty;
 		}
 		public Customer() {
 			super();
@@ -121,6 +139,6 @@ public class Customer {
 			return "Customer [id=" + id + ", name=" + name + ", age=" + age + ", gender=" + gender + ", mobileNo="
 					+ mobileNo + ", emailId=" + emailId + ", latitude=" + latitude + ", longitude=" + longitude
 					+ ", currentLocation=" + currentLocation + ", bookingList=" + bookingList + ", activeBookingFlag="
-					+ activeBookingFlag + "]";
+					+ activeBookingFlag + ",penalty="+penalty+"]";
 		}
 }

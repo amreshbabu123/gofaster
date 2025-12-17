@@ -33,9 +33,10 @@ public class Driver {
 	    
 	    @OneToOne(cascade = CascadeType.ALL)
 	    private Vehicle vehicle;
-	    @OneToMany(cascade = CascadeType.ALL)
+	    @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL)
 	    @JsonIgnore
 	    private List<Booking> bookingList;
+
 	    
 		public List<Booking> getBookingList() {
 			return bookingList;
