@@ -26,17 +26,18 @@ public class Booking {
     private String destinationLocation;
     private double distanceTravelled;
     private double fare;
-    private String estimatedTimeRequired;
+    private double estimatedTimeRequired;
     private LocalDateTime bookingDate;
     private String bookingStatus; // ACTIVE, COMPLETED, CANCELLED
     private String paymentStatus = "not paid";
 
 
     @ManyToOne
-   @JsonIgnore
-    private Customer customer;   // Many bookings → One customer
+    @JoinColumn(name = "customer_id")
+    private Customer customer;
 
     @ManyToOne
+    @JoinColumn(name = "driver_id")
     private Driver driver;       // Many bookings → One driver
 
     @ManyToOne
@@ -86,12 +87,12 @@ public class Booking {
         this.fare = fare;
     }
 
-    public String getEstimatedTimeRequired() {
+    public double getEstimatedTimeRequired() {
         return estimatedTimeRequired;
     }
 
-    public void setEstimatedTimeRequired(String estimatedTimeRequired) {
-        this.estimatedTimeRequired = estimatedTimeRequired;
+    public void setEstimatedTimeRequired(double estimatedTimeHrs) {
+        this.estimatedTimeRequired = estimatedTimeHrs;
     }
 
     public LocalDateTime getBookingDate() {
@@ -150,7 +151,7 @@ public class Booking {
     }
 
 	public Booking(Long id, String sourceLocation, String destinationLocation, double distanceTravelled, double fare,
-			String estimatedTimeRequired, LocalDateTime bookingDate, String bookingStatus, String paymentStatus,
+			double estimatedTimeRequired, LocalDateTime bookingDate, String bookingStatus, String paymentStatus,
 			Customer customer, Driver driver, Vehicle vehicle, Payments payment) {
 		super();
 		this.id = id;

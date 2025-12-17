@@ -2,14 +2,15 @@ package com.quickmove.GoFaster.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.quickmove.GoFaster.dto.BookingHistoryDto;
+
 import com.quickmove.GoFaster.dto.CustomerDto;
 import com.quickmove.GoFaster.dto.RideDetailsDto;
 import com.quickmove.GoFaster.entity.Booking;
@@ -128,4 +129,55 @@ public class CustomerService {
 
         return ResponseEntity.ok(response);
     }
+
+
+	public ResponseEntity<ResponseStructure<Customer>> cancelridebydriver(int bookingId, int custId) {
+
+	    // 1. Find customer
+	    Optional<Customer> optionalCustomer = customerRepo.findById((long) custId);
+	    if (optionalCustomer.isEmpty()) {
+	        throw new RuntimeException("Customer not found");
+	    }
+
+	    Customer customer = optionalCustomer.get();
+
+	    // 2. Find booking
+	    Booking bookingToCancel = null;
+	    for (Booking booking : customer.getBookingList()) {
+	        if (booking.getId() == bookingId) {
+	            bookingToCancel = booking;
+	            break;
+	        }
+	    }
+
+	    if (bookingToCancel == null) {
+	        throw new RuntimeException("Booking not found for this customer");
+	    }
+
+	    // 3. Validate status (optional but recommended)
+	    if ("CANCELLED_BY_CUSTOMER".equalsIgnoreCase(bookingToCancel.getBookingStatus())) {
+	        throw new RuntimeException("Booking already cancelled");
+	    }
+
+	    // 4. Update booking status
+	    bookingToCancel.setBookingStatus("CANCELLED_BY_CUSTOMER");
+	    
+
+	    // 5. Increase penalty COUNT only
+	    customer.setPenalty(customer.getPenalty() + 1);
+
+	    // 6. Save customer (booking saved via cascade)
+	    customerRepo.save(customer);
+
+	    // 7. Response
+	    ResponseStructure<Customer> response = new ResponseStructure<>();
+	    response.setStatuscode(HttpStatus.OK.value());
+	    response.setMessage("Booking cancelled by customer. Penalty count increased.");
+	    response.setData(customer);
+
+	    return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+
+
+
 }

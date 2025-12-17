@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.quickmove.GoFaster.dto.BookVehicleDto;
+import com.quickmove.GoFaster.dto.ORSDistanceResponse;
 import com.quickmove.GoFaster.entity.Booking;
 import com.quickmove.GoFaster.entity.Customer;
 import com.quickmove.GoFaster.entity.Driver;
@@ -29,6 +30,13 @@ public class BookingService {
 
     @Autowired 
     private BookingRepository bookingRepo;
+    
+    @Autowired
+    private ORSService orsService;
+
+    @Autowired
+    private LocationIQService locationIQ;
+
 
     public ResponseEntity<ResponseStructure<Booking>> bookVehicle(BookVehicleDto bookVehicleDto) {
 
@@ -48,6 +56,35 @@ public class BookingService {
         if ("booked".equalsIgnoreCase(driver.getStatus())) {
             throw new RuntimeException("Driver is already booked");
         }
+        
+     // 1. Get coordinates
+        double[] src = locationIQ.getCoordinates(bookVehicleDto.getSourceLocation());
+        double[] dst = locationIQ.getCoordinates(bookVehicleDto.getDestinationLocation());
+
+        // 2. Call already existing ORS distance method
+        ORSDistanceResponse ors = orsService.getDistance(
+                src[0], src[1],
+                dst[0], dst[1]
+        );
+
+        // 3. Actual distance &estimated time
+        double distanceKm = Math.round(ors.getDistanceKm() * 100.0) / 100.0;
+        double estimatedTimeHrs = Math.round(ors.getTimeHours() * 100.0) / 100.0;
+       
+        
+        double baseFare = driver.getVehicle().getPricePerKm() * distanceKm;
+
+     // penalty count from customer
+        int penaltyCount = customer.getPenalty().intValue(); // eg: 3
+
+        double penaltyPercent = penaltyCount * 10;      // 3 × 10 = 30%
+
+        double finalFare = Math.round(
+                (baseFare + (baseFare * penaltyPercent / 100)) * 100.0
+        ) / 100.0;
+
+
+
 
         Booking booking = new Booking();
         booking.setCustomer(customer);
@@ -56,8 +93,11 @@ public class BookingService {
         booking.setSourceLocation(bookVehicleDto.getSourceLocation());
         booking.setDestinationLocation(bookVehicleDto.getDestinationLocation());
         booking.setBookingDate(LocalDateTime.now());
-        booking.setDistanceTravelled(10.0);
-        booking.setFare(500.0);
+
+        booking.setDistanceTravelled(distanceKm);   // ⭐ actual distance
+        booking.setEstimatedTimeRequired(estimatedTimeHrs);
+        booking.setFare(finalFare);   
+        
         booking.setBookingStatus("ACTIVE");
         booking.setPaymentStatus("NOT_PAID");
 
