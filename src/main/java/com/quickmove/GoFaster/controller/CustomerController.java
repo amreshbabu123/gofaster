@@ -41,5 +41,11 @@ public class CustomerController {
 	    public ResponseEntity<ResponseStructure<BookingHistoryDto>>getCustomerBookingHistory(@RequestParam Long mobileNo) {
             return customerService.getCustomerBookingHistoryByMobile(mobileNo);
 	    }
+	    
+	    @PostMapping("/customer/cancelbooking")
+	    public ResponseEntity<ResponseStructure<Customer>> cancelridebydriver(@RequestParam int bookingId,@RequestParam int custId){
+			return customerService.cancelridebydriver(bookingId,custId);
+	    	
+	    }
 
 }
