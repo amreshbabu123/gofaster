@@ -14,6 +14,7 @@ import com.quickmove.GoFaster.entity.Customer;
 import com.quickmove.GoFaster.entity.Driver;
 import com.quickmove.GoFaster.exception.CustomerNotFoundException;
 import com.quickmove.GoFaster.exception.DriverMobileNoNotFound;
+import com.quickmove.GoFaster.exception.DriverNotFoundException;
 import com.quickmove.GoFaster.repository.BookingRepository;
 import com.quickmove.GoFaster.repository.CustomerRepository;
 import com.quickmove.GoFaster.repository.DriverRepository;
@@ -54,7 +55,7 @@ public class BookingService {
         }
 
         if ("booked".equalsIgnoreCase(driver.getStatus())) {
-            throw new RuntimeException("Driver is already booked");
+            throw new DriverNotFoundException("Driver is already booked");
         }
         
      // 1. Get coordinates
@@ -111,6 +112,26 @@ public class BookingService {
 
         customerRepo.save(customer);
         driverRepo.save(driver);
+        
+     // 📧 SEND MAIL AFTER BOOKING
+        // ============================
+
+        String subject = "Booking Confirmed | Booking ID: " + booking.getId();
+
+        String message =
+                "Dear " + customer.getName() + ",\n\n" +
+                "Your booking has been successfully confirmed.\n\n" +
+                "📍 Source: " + booking.getSourceLocation() + "\n" +
+                "📍 Destination: " + booking.getDestinationLocation() + "\n" +
+                "🚗 Driver: " + driver.getName() + " (" + driver.getMobileNo() + ")\n" +
+                "🚘 Vehicle: " + driver.getVehicle().getVehicleType() + "\n" +
+                "📏 Distance: " + distanceKm + " km\n" +
+                "⏱ Estimated Time: " + estimatedTimeHrs + " hrs\n" +
+                "💰 Fare: ₹" + finalFare + "\n\n" +
+                "Thank you for choosing QuickMove!\n" +
+                "— QuickMove Support Team";
+
+        mailer.sendMail("vamshiaeru39@gmail.com", subject, message);
 
         ResponseStructure<Booking> response = new ResponseStructure<>();
         response.setStatuscode(HttpStatus.CREATED.value());
@@ -170,6 +191,22 @@ public class BookingService {
 
         return new ResponseEntity<>(structure, HttpStatus.OK);
     }
+
+
+
+
+    @Autowired
+    private MailService mailer;
+	public void sendingMail() {
+		// TODO Auto-generated method stub
+		
+		mailer.sendMail(
+			    "boyaramanjaneyulu665@gmail.com",
+			    "Booking Confirmed",
+			    "Your booking has been successfully confirmed."
+			);
+
+	}
 
     
     	
