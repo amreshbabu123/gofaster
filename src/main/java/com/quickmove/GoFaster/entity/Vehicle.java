@@ -1,9 +1,11 @@
 package com.quickmove.GoFaster.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Vehicle {
@@ -19,6 +21,15 @@ public class Vehicle {
 	    private String vehicleavailabilityStatus="Available";
 	    private double pricePerKm;
 	    private int averageSpeed=60;
+	    @OneToOne(cascade = CascadeType.ALL)
+	    private Driver driver;
+	    
+		public Driver getDriver() {
+			return driver;
+		}
+		public void setDriver(Driver driver) {
+			this.driver = driver;
+		}
 		public Long getId() {
 			return id;
 		}
@@ -81,7 +92,7 @@ public class Vehicle {
 		}
 		public Vehicle(Long id, String vehicleName, String vehicleNo, String vehicleType, String vehicleModel,
 				String vehiclecapaCity, String vehiclecurrentCity, String vehicleavailabilityStatus, double pricePerKm,
-				int averageSpeed) {
+				int averageSpeed, Driver driver) {
 			super();
 			this.id = id;
 			this.vehicleName = vehicleName;
@@ -93,6 +104,7 @@ public class Vehicle {
 			this.vehicleavailabilityStatus = vehicleavailabilityStatus;
 			this.pricePerKm = pricePerKm;
 			this.averageSpeed = averageSpeed;
+			this.driver = driver;
 		}
 		public Vehicle() {
 			super();
@@ -103,9 +115,8 @@ public class Vehicle {
 					+ vehicleType + ", vehicleModel=" + vehicleModel + ", vehiclecapaCity=" + vehiclecapaCity
 					+ ", vehiclecurrentCity=" + vehiclecurrentCity + ", vehicleavailabilityStatus="
 					+ vehicleavailabilityStatus + ", pricePerKm=" + pricePerKm + ", averageSpeed=" + averageSpeed
-					+ ", driver=" +"]";
-		}   
-	
+					+ ", driver=" + driver + "]";
+		}
 }
 		
 	    

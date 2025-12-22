@@ -1,7 +1,7 @@
 package com.quickmove.GoFaster.entity;
 
 
-import java.time.LocalDateTime;
+import java.time.LocalDateTime; 
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -27,6 +27,7 @@ public class Driver {
 	    private Long mobileNo;
 	    private String gender;
 	    private String mailId;
+	    private String password;
 	    private double latitude;
 	    private double longitude;
 	    private String currentAddress;
@@ -36,10 +37,14 @@ public class Driver {
 	    @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL)
 	    @JsonIgnore
 	    private List<Booking> bookingList;
-
 	    
 	    
-	    
+		public String getPassword() {
+			return password;
+		}
+		public void setPassword(String password) {
+			this.password = password;
+		}
 		public List<Booking> getBookingList() {
 			return bookingList;
 		}
@@ -132,7 +137,7 @@ public class Driver {
 	        this.blockedAt = blockedAt;
 	    }
 		public Driver(Long id, String licenceNo, String upiId, String name, String status, int age, Long mobileNo,
-				String gender, String mailId, double latitude, double longitude, String currentAddress,
+				String gender, String mailId, String password, double latitude, double longitude, String currentAddress,
 				LocalDateTime blockedAt, Vehicle vehicle, List<Booking> bookingList) {
 			super();
 			this.id = id;
@@ -144,6 +149,7 @@ public class Driver {
 			this.mobileNo = mobileNo;
 			this.gender = gender;
 			this.mailId = mailId;
+			this.password = password;
 			this.latitude = latitude;
 			this.longitude = longitude;
 			this.currentAddress = currentAddress;
@@ -158,7 +164,8 @@ public class Driver {
 		public String toString() {
 			return "Driver [id=" + id + ", licenceNo=" + licenceNo + ", upiId=" + upiId + ", name=" + name + ", status="
 					+ status + ", age=" + age + ", mobileNo=" + mobileNo + ", gender=" + gender + ", mailId=" + mailId
-					+ ", latitude=" + latitude + ", longitude=" + longitude + ", currentAddress=" + currentAddress
-					+ ", blockedAt=" + blockedAt + ", vehicle=" + vehicle + ", bookingList=" + bookingList + "]";
+					+ ", password=" + password + ", latitude=" + latitude + ", longitude=" + longitude
+					+ ", currentAddress=" + currentAddress + ", blockedAt=" + blockedAt + ", vehicle=" + vehicle
+					+ ", bookingList=" + bookingList + "]";
 		}	
 }

@@ -1,6 +1,6 @@
 package com.quickmove.GoFaster.controller;
 
-import org.springframework.beans.factory.annotation.Autowired; 
+import org.springframework.beans.factory.annotation.Autowired;   
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +15,7 @@ import com.quickmove.GoFaster.dto.CustomerDto;
 import com.quickmove.GoFaster.entity.Customer;
 import com.quickmove.GoFaster.service.CustomerService;
 import com.quickmove.GoFaster.util.ResponseStructure;
+
 @RestController
 public class CustomerController {
 	
@@ -47,5 +48,4 @@ public class CustomerController {
 			return customerService.cancelridebydriver(bookingId,custId);
 	    	
 	    }
-
 }

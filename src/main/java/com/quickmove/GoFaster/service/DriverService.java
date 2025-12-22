@@ -1,6 +1,6 @@
 package com.quickmove.GoFaster.service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDateTime; 
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +13,6 @@ import com.quickmove.GoFaster.dto.BookingHistoryDto;
 import com.quickmove.GoFaster.dto.CurrentLocationDTO;
 import com.quickmove.GoFaster.dto.RideDetailsDto;
 import com.quickmove.GoFaster.entity.Booking;
-import com.quickmove.GoFaster.entity.Customer;
 import com.quickmove.GoFaster.entity.Driver;
 import com.quickmove.GoFaster.exception.BookingNotFoundException;
 import com.quickmove.GoFaster.exception.DriverMobileNoNotFound;
@@ -67,11 +66,11 @@ public class DriverService {
         double lat = locationDto.getLatitude();
         double lon = locationDto.getLongitude();
 
-        // Update coordinates
+        
         driver.setLatitude(lat);
         driver.setLongitude(lon);
 
-        // Get human-readable address
+
         String address = locationIQService.getAddressFromCoordinates(lat, lon);
         driver.setCurrentAddress(address);
 
@@ -159,7 +158,7 @@ public class DriverService {
         Driver driver = driverRepository.findById(driverId)
                 .orElseThrow(() -> new DriverNotFoundException("Driver not found"));
 
-        // 🔓 Auto-unblock check FIRST
+      
         autoUnblockIf24HoursPassed(driver);
 
         if ("BLOCKED".equalsIgnoreCase(driver.getStatus())) {
@@ -178,12 +177,12 @@ public class DriverService {
             }
         }
 
-        // cancel current booking
+      
         booking.setBookingStatus("CANCELLED_BY_DRIVER");
 
         int totalCancels = cancelCount + 1;
 
-        // 🚫 BLOCK AFTER 5 CANCELLATIONS
+   
         if (totalCancels >= 5) {
             driver.setStatus("BLOCKED");
             driver.setBlockedAt(LocalDateTime.now());
@@ -228,7 +227,5 @@ public class DriverService {
             }
         }
     }
-
-
 }
 

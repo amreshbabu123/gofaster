@@ -1,6 +1,6 @@
 package com.quickmove.GoFaster.service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDateTime; 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -40,8 +40,7 @@ public class BookingService {
 
     public ResponseEntity<ResponseStructure<Booking>> bookVehicle(BookVehicleDto bookVehicleDto) {
 
-        Customer customer = customerRepo.findByMobileNo(
-                Long.parseLong(bookVehicleDto.getCustomerMobileNo()));
+    	Customer customer = customerRepo.findByMobileNo(bookVehicleDto.getCustomerMobileNo());
 
         if (customer == null) {
             throw new CustomerNotFoundException("Customer not found");
@@ -57,27 +56,27 @@ public class BookingService {
             throw new RuntimeException("Driver is already booked");
         }
         
-     // 1. Get coordinates
+  
         double[] src = locationIQ.getCoordinates(bookVehicleDto.getSourceLocation());
         double[] dst = locationIQ.getCoordinates(bookVehicleDto.getDestinationLocation());
 
-        // 2. Call already existing ORS distance method
+       
         ORSDistanceResponse ors = orsService.getDistance(
                 src[0], src[1],
                 dst[0], dst[1]
         );
 
-        // 3. Actual distance &estimated time
+       
         double distanceKm = Math.round(ors.getDistanceKm() * 100.0) / 100.0;
         double estimatedTimeHrs = Math.round(ors.getTimeHours() * 100.0) / 100.0;
        
         
         double baseFare = driver.getVehicle().getPricePerKm() * distanceKm;
 
-     // penalty count from customer
-        int penaltyCount = customer.getPenalty().intValue(); // eg: 3
+  
+        int penaltyCount = customer.getPenalty().intValue(); 
 
-        double penaltyPercent = penaltyCount * 10;      // 3 × 10 = 30%
+        double penaltyPercent = penaltyCount * 10;     
 
         double finalFare = Math.round(
                 (baseFare + (baseFare * penaltyPercent / 100)) * 100.0
@@ -89,12 +88,12 @@ public class BookingService {
         Booking booking = new Booking();
         booking.setCustomer(customer);
         booking.setDriver(driver);
-        booking.setVehicle(driver.getVehicle()); // ⭐ Assign vehicle here
+        booking.setVehicle(driver.getVehicle()); 
         booking.setSourceLocation(bookVehicleDto.getSourceLocation());
         booking.setDestinationLocation(bookVehicleDto.getDestinationLocation());
         booking.setBookingDate(LocalDateTime.now());
 
-        booking.setDistanceTravelled(distanceKm);   // ⭐ actual distance
+        booking.setDistanceTravelled(distanceKm);  
         booking.setEstimatedTimeRequired(estimatedTimeHrs);
         booking.setFare(finalFare);   
         
@@ -170,8 +169,5 @@ public class BookingService {
 
         return new ResponseEntity<>(structure, HttpStatus.OK);
     }
-
-    
-    	
 
 }

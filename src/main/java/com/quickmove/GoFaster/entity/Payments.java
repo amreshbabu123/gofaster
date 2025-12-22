@@ -10,8 +10,8 @@ public class Payments {
     private Long id;
 
     private double amount;
-    private String paymentMode;   // CASH, UPI, CARD
-    private String paymentStatus; // PAID, FAILED, PENDING
+    private String paymentMode;   
+    private String paymentStatus; 
 
     @OneToOne(cascade = CascadeType.ALL)
     private Booking booking;

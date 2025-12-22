@@ -37,22 +37,22 @@ public class PaymentsService {
 
     public ResponseEntity<ResponseStructure<Payments>> driverCompleteRidePayByCash(Long bookingId) {
 
-        // Fetch booking
+       
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
 
-        // Update booking status
+        
         booking.setBookingStatus("COMPLETED");
         booking.setPaymentStatus("PAID");
 
-        // Fetch customer and update
+     
         Customer customer = booking.getCustomer();
         if (customer != null) {
             customer.setActiveBookingFlag(false);
             customerRepository.save(customer);
         }
 
-        // Fetch vehicle and update availability
+      
         Vehicle vehicle = booking.getVehicle();
         if (vehicle != null) {
             vehicle.setVehicleavailabilityStatus("Available");
@@ -61,7 +61,7 @@ public class PaymentsService {
             throw new RuntimeException("Vehicle not assigned to this booking");
         }
 
-        // Create payment record
+   
         Payments payment = new Payments();
         payment.setBooking(booking);
         payment.setCustomer(customer);
@@ -70,11 +70,11 @@ public class PaymentsService {
         payment.setPaymentMode("CASH");
         payment.setPaymentStatus("PAID");
 
-        // Save booking and payment
+      
         bookingRepository.save(booking);
         paymentsRepository.save(payment);
 
-        // Prepare response
+     
         ResponseStructure<Payments> response = new ResponseStructure<>();
         response.setStatuscode(HttpStatus.OK.value());
         response.setMessage("Ride completed & payment done by cash");
@@ -93,14 +93,14 @@ public class PaymentsService {
         double fare = booking.getFare();
         String upiId = booking.getDriver().getUpiId();
 
-        // QR API URL
+     
         String qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data="
                 + "upi://pay?pa=" + upiId + "&am=" + fare;
 
-        // Call API
+      
         byte[] qrImage = restTemplate.getForObject(qrUrl, byte[].class);
 
-        // DTO
+     
         UPIPaymentDto dto = new UPIPaymentDto();
         dto.setFare(fare);
         dto.setQr(qrImage);
@@ -120,19 +120,19 @@ public class PaymentsService {
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new RuntimeException("Booking not found"));
 
-        // Update booking
+      
         booking.setBookingStatus("COMPLETED");
         booking.setPaymentStatus("PAID");
 
-        // Vehicle update
+    
         Vehicle vehicle = booking.getVehicle();
         vehicle.setVehicleavailabilityStatus("Available");
 
-        // Customer update (if flag exists)
+       
         Customer customer = booking.getCustomer();
-        // customer.setActiveBookingFlag(false); // enable if field exists
+ 
 
-        // Create payment
+  
         Payments payment = new Payments();
         payment.setBooking(booking);
         payment.setCustomer(customer);
@@ -141,7 +141,7 @@ public class PaymentsService {
         payment.setPaymentMode("UPI");
         payment.setPaymentStatus("PAID");
 
-        // Save all
+       
         paymentsRepository.save(payment);
         bookingRepository.save(booking);
         vehicleRepository.save(vehicle);

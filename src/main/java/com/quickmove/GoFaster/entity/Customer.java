@@ -22,10 +22,11 @@ public class Customer {
 	    private String gender;
 	    private Long mobileNo;
 	    private String emailId;
+	    private String password;
 	    private double latitude;
 	    private double longitude;
 	    private String currentLocation;
-        // Customer has multiple bookings
+   
 	    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
 	    @JsonIgnore
 	    private List<Booking> bookingList;
@@ -33,8 +34,16 @@ public class Customer {
 	    private boolean activeBookingFlag = false;
 	    
 	    private Double penalty=(double) 0;
+	    
+	    
 
 	    
+		public String getPassword() {
+			return password;
+		}
+		public void setPassword(String password) {
+			this.password = password;
+		}
 		public Long getId() {
 			return id;
 		}
@@ -113,10 +122,9 @@ public class Customer {
 		public void setPenalty(Double penalty) {
 			this.penalty = penalty;
 		}
-		
-		public Customer(Long id, String name, int age, String gender, Long mobileNo, String emailId, double latitude,
-				double longitude, String currentLocation, List<Booking> bookingList, boolean activeBookingFlag,
-				Double penalty) {
+		public Customer(Long id, String name, int age, String gender, Long mobileNo, String emailId, String password,
+				double latitude, double longitude, String currentLocation, List<Booking> bookingList,
+				boolean activeBookingFlag, Double penalty) {
 			super();
 			this.id = id;
 			this.name = name;
@@ -124,6 +132,7 @@ public class Customer {
 			this.gender = gender;
 			this.mobileNo = mobileNo;
 			this.emailId = emailId;
+			this.password = password;
 			this.latitude = latitude;
 			this.longitude = longitude;
 			this.currentLocation = currentLocation;
@@ -137,8 +146,8 @@ public class Customer {
 		@Override
 		public String toString() {
 			return "Customer [id=" + id + ", name=" + name + ", age=" + age + ", gender=" + gender + ", mobileNo="
-					+ mobileNo + ", emailId=" + emailId + ", latitude=" + latitude + ", longitude=" + longitude
-					+ ", currentLocation=" + currentLocation + ", bookingList=" + bookingList + ", activeBookingFlag="
-					+ activeBookingFlag + ",penalty="+penalty+"]";
+					+ mobileNo + ", emailId=" + emailId + ", password=" + password + ", latitude=" + latitude
+					+ ", longitude=" + longitude + ", currentLocation=" + currentLocation + ", bookingList="
+					+ bookingList + ", activeBookingFlag=" + activeBookingFlag + ", penalty=" + penalty + "]";
 		}
 }

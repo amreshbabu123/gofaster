@@ -40,8 +40,8 @@ public class ORSService {
             double seconds = json.get("routes").get(0).get("summary").get("duration").asDouble();
 
             return new ORSDistanceResponse(
-                    meters / 1000,   // km
-                    seconds / 3600   // hrs
+                    meters / 1000,   
+                    seconds / 3600   
             );
 
         } catch (Exception e) {

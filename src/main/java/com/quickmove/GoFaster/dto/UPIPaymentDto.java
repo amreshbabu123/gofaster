@@ -6,6 +6,8 @@ public class UPIPaymentDto {
 	
 	private double fare;
 	private byte[] qr;
+	
+	
 	public double getFare() {
 		return fare;
 	}
