@@ -177,8 +177,13 @@ public class DriverService {
             }
         }
 
+
+        // cancel current booking9
       
         booking.setBookingStatus("CANCELLED_BY_DRIVER");
+        
+        driver.setStatus("Available");
+        driver.getVehicle().setVehicleavailabilityStatus("Available");
 
         int totalCancels = cancelCount + 1;
 

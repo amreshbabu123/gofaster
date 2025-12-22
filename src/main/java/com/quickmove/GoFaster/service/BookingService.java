@@ -14,6 +14,7 @@ import com.quickmove.GoFaster.entity.Customer;
 import com.quickmove.GoFaster.entity.Driver;
 import com.quickmove.GoFaster.exception.CustomerNotFoundException;
 import com.quickmove.GoFaster.exception.DriverMobileNoNotFound;
+import com.quickmove.GoFaster.exception.DriverNotFoundException;
 import com.quickmove.GoFaster.repository.BookingRepository;
 import com.quickmove.GoFaster.repository.CustomerRepository;
 import com.quickmove.GoFaster.repository.DriverRepository;
@@ -53,7 +54,7 @@ public class BookingService {
         }
 
         if ("booked".equalsIgnoreCase(driver.getStatus())) {
-            throw new RuntimeException("Driver is already booked");
+            throw new DriverNotFoundException("Driver is already booked");
         }
         
   
@@ -82,6 +83,9 @@ public class BookingService {
                 (baseFare + (baseFare * penaltyPercent / 100)) * 100.0
         ) / 100.0;
 
+        // 5️⃣ OTP GENERATION (CUSTOMER ONLY)
+        // ============================
+        int otp = 1000 + new java.util.Random().nextInt(9000); // 4-digit OTP
 
 
 
@@ -99,6 +103,8 @@ public class BookingService {
         
         booking.setBookingStatus("ACTIVE");
         booking.setPaymentStatus("NOT_PAID");
+        
+        booking.setDeliveryOtp(otp); // 🔐 stored, NOT shared
 
         customer.getBookingList().add(booking);
         driver.getBookingList().add(booking);
@@ -110,6 +116,29 @@ public class BookingService {
 
         customerRepo.save(customer);
         driverRepo.save(driver);
+        
+     // 📧 SEND MAIL AFTER BOOKING
+        // ============================
+
+        String subject = "Booking Confirmed | Booking ID: " + booking.getId();
+
+        String message =
+                "Dear " + customer.getName() + ",\n\n" +
+                "Your ride has been successfully booked.\n\n" +
+                "📍 Source: " + booking.getSourceLocation() + "\n" +
+                "📍 Destination: " + booking.getDestinationLocation() + "\n" +
+                "🚗 Driver: " + driver.getName() + "\n" +
+                "🚘 Vehicle: " + driver.getVehicle().getVehicleType() + "\n" +
+                "📏 Distance: " + distanceKm + " km\n" +
+                "⏱ Estimated Time: " + estimatedTimeHrs + " hrs\n" +
+                "💰 Fare: ₹" + finalFare + "\n\n" +
+                "🔐 Your Ride OTP: " + otp + "\n\n" +
+                "⚠️ Please share this OTP verbally with the driver.\n" +
+                "Do NOT share it in chat or screenshots.\n\n" +
+                "— QuickMove Support Team";
+        
+        // mailer.sendMail(customer.getEmail(), subject, message);
+        mailer.sendMail("boyaramanjaneyulu665@gmail.com", subject, message);
 
         ResponseStructure<Booking> response = new ResponseStructure<>();
         response.setStatuscode(HttpStatus.CREATED.value());
@@ -170,4 +199,18 @@ public class BookingService {
         return new ResponseEntity<>(structure, HttpStatus.OK);
     }
 
+
+
+    @Autowired
+    private MailService mailer;
+	public void sendingMail() {
+		// TODO Auto-generated method stub
+		
+		mailer.sendMail(
+			    "boyaramanjaneyulu665@gmail.com",
+			    "Booking Confirmed",
+			    "Your booking has been successfully confirmed."
+			);
+
+	}
 }

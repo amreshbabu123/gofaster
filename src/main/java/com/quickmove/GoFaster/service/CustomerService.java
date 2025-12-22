@@ -15,14 +15,19 @@ import com.quickmove.GoFaster.dto.CustomerDto;
 import com.quickmove.GoFaster.dto.RideDetailsDto;
 import com.quickmove.GoFaster.entity.Booking;
 import com.quickmove.GoFaster.entity.Customer;
+import com.quickmove.GoFaster.entity.Driver;
+import com.quickmove.GoFaster.exception.BookingNotFoundException;
 import com.quickmove.GoFaster.exception.CustomerNotFoundException;
 import com.quickmove.GoFaster.repository.CustomerRepository;
+import com.quickmove.GoFaster.repository.DriverRepository;
 import com.quickmove.GoFaster.util.ResponseStructure;
 
 @Service
 public class CustomerService {
 	 @Autowired
 	    private CustomerRepository customerRepo;
+	 @Autowired
+	 private DriverRepository driverRepo;
 
 	 public ResponseEntity<ResponseStructure<Customer>> registerCustomer(CustomerDto customerDto)  {
 
@@ -92,13 +97,13 @@ public class CustomerService {
 
 		Customer customer = customerRepo.findByMobileNo(mobileNo);
 		if (customer == null) {
-		    throw new RuntimeException("Customer not found");
+		    throw new CustomerNotFoundException("Customer not found");
 		}
 
         List<Booking> bookings = customer.getBookingList();
 
         if (bookings == null || bookings.isEmpty()) {
-            throw new RuntimeException("No booking history found");
+            throw new BookingNotFoundException("No booking history found");
         }
 
         List<RideDetailsDto> history = new ArrayList<>();
@@ -134,7 +139,7 @@ public class CustomerService {
     }
 
 
-	public ResponseEntity<ResponseStructure<Customer>> cancelridebydriver(int bookingId, int custId) {
+	public ResponseEntity<ResponseStructure<Customer>> cancelRideByCustomer(int bookingId, int custId) {
 
 	    Optional<Customer> optionalCustomer = customerRepo.findById((long) custId);
 	    if (optionalCustomer.isEmpty()) {
@@ -152,28 +157,45 @@ public class CustomerService {
 	    }
 
 	    if (bookingToCancel == null) {
-	        throw new RuntimeException("Booking not found for this customer");
+	        throw new BookingNotFoundException("Booking not found for this customer");
 	    }
 
 	   
 	    if ("CANCELLED_BY_CUSTOMER".equalsIgnoreCase(bookingToCancel.getBookingStatus())) {
-	        throw new RuntimeException("Booking already cancelled");
+	        throw new BookingNotFoundException("Booking already cancelled");
 	    }
 
 	   
 	    bookingToCancel.setBookingStatus("CANCELLED_BY_CUSTOMER");
 	    
+	 // 5. Update DRIVER + VEHICLE status
+	    Driver driver = bookingToCancel.getDriver();
+	    driver.setStatus("available");
 
+	    if (driver.getVehicle() != null) {
+	        driver.getVehicle().setVehicleavailabilityStatus("available");
+	    }
+	    
+	    
+
+
+	    // 6. Increase penalty COUNT only
+	    customer.setPenalty(customer.getPenalty() + 1);
+
+	    // 7. Save customer (booking saved via cascade)
 	  
 	    customer.setPenalty(customer.getPenalty() + 1);
 
 	  
-	    customerRepo.save(customer);
 
-	
+	    customerRepo.save(customer);
+	    driverRepo.save(driver); 
+
+
+	 // 8. Response
 	    ResponseStructure<Customer> response = new ResponseStructure<>();
 	    response.setStatuscode(HttpStatus.OK.value());
-	    response.setMessage("Booking cancelled by customer. Penalty count increased.");
+	    response.setMessage("Booking cancelled. Driver is now available. Penalty increased.");
 	    response.setData(customer);
 
 	    return new ResponseEntity<>(response, HttpStatus.OK);
