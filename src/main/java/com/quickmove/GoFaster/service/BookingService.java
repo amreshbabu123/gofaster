@@ -84,6 +84,9 @@ public class BookingService {
                 (baseFare + (baseFare * penaltyPercent / 100)) * 100.0
         ) / 100.0;
 
+        // 5️⃣ OTP GENERATION (CUSTOMER ONLY)
+        // ============================
+        int otp = 1000 + new java.util.Random().nextInt(9000); // 4-digit OTP
 
 
 
@@ -101,6 +104,8 @@ public class BookingService {
         
         booking.setBookingStatus("ACTIVE");
         booking.setPaymentStatus("NOT_PAID");
+        
+        booking.setDeliveryOtp(otp); // 🔐 stored, NOT shared
 
         customer.getBookingList().add(booking);
         driver.getBookingList().add(booking);
@@ -120,18 +125,21 @@ public class BookingService {
 
         String message =
                 "Dear " + customer.getName() + ",\n\n" +
-                "Your booking has been successfully confirmed.\n\n" +
+                "Your ride has been successfully booked.\n\n" +
                 "📍 Source: " + booking.getSourceLocation() + "\n" +
                 "📍 Destination: " + booking.getDestinationLocation() + "\n" +
-                "🚗 Driver: " + driver.getName() + " (" + driver.getMobileNo() + ")\n" +
+                "🚗 Driver: " + driver.getName() + "\n" +
                 "🚘 Vehicle: " + driver.getVehicle().getVehicleType() + "\n" +
                 "📏 Distance: " + distanceKm + " km\n" +
                 "⏱ Estimated Time: " + estimatedTimeHrs + " hrs\n" +
                 "💰 Fare: ₹" + finalFare + "\n\n" +
-                "Thank you for choosing QuickMove!\n" +
+                "🔐 Your Ride OTP: " + otp + "\n\n" +
+                "⚠️ Please share this OTP verbally with the driver.\n" +
+                "Do NOT share it in chat or screenshots.\n\n" +
                 "— QuickMove Support Team";
-
-        mailer.sendMail("vamshiaeru39@gmail.com", subject, message);
+        
+        // mailer.sendMail(customer.getEmail(), subject, message);
+        mailer.sendMail("boyaramanjaneyulu665@gmail.com", subject, message);
 
         ResponseStructure<Booking> response = new ResponseStructure<>();
         response.setStatuscode(HttpStatus.CREATED.value());

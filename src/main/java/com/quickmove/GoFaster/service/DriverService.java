@@ -1,5 +1,6 @@
 package com.quickmove.GoFaster.service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +15,9 @@ import com.quickmove.GoFaster.dto.RideDetailsDto;
 import com.quickmove.GoFaster.entity.Booking;
 import com.quickmove.GoFaster.entity.Customer;
 import com.quickmove.GoFaster.entity.Driver;
+import com.quickmove.GoFaster.exception.BookingNotFoundException;
 import com.quickmove.GoFaster.exception.DriverMobileNoNotFound;
+import com.quickmove.GoFaster.exception.DriverNotFoundException;
 import com.quickmove.GoFaster.repository.BookingRepository;
 import com.quickmove.GoFaster.repository.DriverRepository;
 import com.quickmove.GoFaster.util.ResponseStructure;
@@ -29,6 +32,7 @@ public class DriverService {
     
     @Autowired
     private BookingRepository bookingRepository;
+
 
     public ResponseEntity<ResponseStructure<Driver>> deleteDriverByMobileNo(Long mobileNo) {
 
@@ -49,9 +53,7 @@ public class DriverService {
     }
 
     
-    
 
-    
     public ResponseEntity<ResponseStructure<Driver>> updateCurrentVehicleLocation(
             Long mobileNo, CurrentLocationDTO locationDto) {
 
@@ -145,6 +147,91 @@ public class DriverService {
 
         return ResponseEntity.ok(response);
     }
-	
+
+
+
+
+
+    public ResponseEntity<ResponseStructure<Driver>> driverCancelTheBooking(long driverId, long bookingId) {
+
+        ResponseStructure<Driver> structure = new ResponseStructure<>();
+
+        Driver driver = driverRepository.findById(driverId)
+                .orElseThrow(() -> new DriverNotFoundException("Driver not found"));
+
+        // 🔓 Auto-unblock check FIRST
+        autoUnblockIf24HoursPassed(driver);
+
+        if ("BLOCKED".equalsIgnoreCase(driver.getStatus())) {
+            throw new IllegalStateException("Driver is blocked. Please try after 24 hours");
+        }
+
+        Booking booking = bookingRepository.findByIdAndDriverId(bookingId, driverId)
+                .orElseThrow(() -> new BookingNotFoundException("Booking not found for this driver"));
+
+        List<Booking> bookingList = bookingRepository.findByDriverId(driverId);
+
+        int cancelCount = 0;
+        for (Booking b : bookingList) {
+            if ("CANCELLED_BY_DRIVER".equalsIgnoreCase(b.getBookingStatus())) {
+                cancelCount++;
+            }
+        }
+
+        // cancel current booking9
+        booking.setBookingStatus("CANCELLED_BY_DRIVER");
+        
+        driver.setStatus("Available");
+        driver.getVehicle().setVehicleavailabilityStatus("Available");
+
+        int totalCancels = cancelCount + 1;
+
+        // 🚫 BLOCK AFTER 5 CANCELLATIONS
+        if (totalCancels >= 5) {
+            driver.setStatus("BLOCKED");
+            driver.setBlockedAt(LocalDateTime.now());
+
+            if (driver.getVehicle() != null) {
+                driver.getVehicle().setVehicleavailabilityStatus("UNAVAILABLE");
+            }
+        }
+
+        driverRepository.save(driver);
+        bookingRepository.save(booking);
+
+        structure.setStatuscode(HttpStatus.OK.value());
+        structure.setMessage(
+                totalCancels >= 5
+                ? "Booking cancelled. Driver is blocked for 24 hours"
+                : "Booking cancelled successfully"
+        );
+        structure.setData(driver);
+
+        return new ResponseEntity<>(structure, HttpStatus.OK);
+    }
+    
+    
+    
+    
+    private void autoUnblockIf24HoursPassed(Driver driver) {
+
+        if ("BLOCKED".equalsIgnoreCase(driver.getStatus())
+                && driver.getBlockedAt() != null) {
+
+            if (driver.getBlockedAt().plusHours(24).isBefore(LocalDateTime.now())) {
+
+                driver.setStatus("Available");
+                driver.setBlockedAt(null);
+
+                if (driver.getVehicle() != null) {
+                    driver.getVehicle().setVehicleavailabilityStatus("AVAILABLE");
+                }
+
+                driverRepository.save(driver);
+            }
+        }
+    }
+
+
 }
 

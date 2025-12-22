@@ -30,6 +30,10 @@ public class Booking {
     private LocalDateTime bookingDate;
     private String bookingStatus; // ACTIVE, COMPLETED, CANCELLED
     private String paymentStatus = "not paid";
+    
+    @Column(nullable = true)
+    @JsonIgnore
+    private Integer deliveryOtp ;
 
 
     @ManyToOne
@@ -149,6 +153,16 @@ public class Booking {
     public void setPayment(Payments payment) {
         this.payment = payment;
     }
+    
+    
+
+	public Integer getDeliveryOtp() {
+		return deliveryOtp;
+	}
+
+	public void setDeliveryOtp(Integer deliveryOtp) {
+		this.deliveryOtp = deliveryOtp;
+	}
 
 	public Booking(Long id, String sourceLocation, String destinationLocation, double distanceTravelled, double fare,
 			double estimatedTimeRequired, LocalDateTime bookingDate, String bookingStatus, String paymentStatus,
@@ -179,7 +193,7 @@ public class Booking {
 				+ destinationLocation + ", distanceTravelled=" + distanceTravelled + ", fare=" + fare
 				+ ", estimatedTimeRequired=" + estimatedTimeRequired + ", bookingDate=" + bookingDate
 				+ ", bookingStatus=" + bookingStatus + ", paymentStatus=" + paymentStatus + ", customer=" + customer
-				+ ", driver=" + driver + ", vehicle=" + vehicle + ", payment=" + payment + "]";
+				+ ", driver=" + driver + ", vehicle=" + vehicle + ", payment=" + payment + ",deliveryOtp:"+deliveryOtp+"]";
 	}
     
 }

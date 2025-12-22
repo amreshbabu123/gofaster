@@ -1,6 +1,7 @@
 package com.quickmove.GoFaster.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,6 +18,11 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     Booking findDriverActiveBooking(@Param("mobileNo") long mobileNo);
 
 	List<Booking> findByDriver_MobileNoAndBookingStatus(Long mobileNo, String bookingStatus);
+	
+	
+	 Optional<Booking> findByIdAndDriverId(long bookingId, long driverId);
+
+	 List<Booking> findByDriverId(long driverId);
 }
 
 
