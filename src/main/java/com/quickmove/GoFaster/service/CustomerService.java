@@ -1,6 +1,6 @@
 package com.quickmove.GoFaster.service;
 
-import java.util.ArrayList;
+import java.util.ArrayList; 
 import java.util.List;
 import java.util.Optional;
 
@@ -51,6 +51,7 @@ public class CustomerService {
 	    }    
 	 
 	 
+	 
     public ResponseEntity<ResponseStructure<Customer>> findByMobile(long mobileNo) {
 
 		    Customer c = customerRepo.findByMobileNo(mobileNo);
@@ -69,6 +70,7 @@ public class CustomerService {
 
 	    
 	    
+    
 	public ResponseEntity<ResponseStructure<Customer>> deleteByMobile(long mobileNo) {
 
 		    Customer c = customerRepo.findByMobileNo(mobileNo);
@@ -90,6 +92,7 @@ public class CustomerService {
 
 	
 	
+	
 	public ResponseEntity<ResponseStructure<BookingHistoryDto>> getCustomerBookingHistoryByMobile(Long mobileNo) {
 
 		Customer customer = customerRepo.findByMobileNo(mobileNo);
@@ -108,7 +111,7 @@ public class CustomerService {
 
         for (Booking booking : bookings) {
 
-            // Optional: show only COMPLETED rides
+           
             if (!"COMPLETED".equalsIgnoreCase(booking.getBookingStatus())) {
                 continue;
             }
@@ -138,15 +141,13 @@ public class CustomerService {
 
 	public ResponseEntity<ResponseStructure<Customer>> cancelRideByCustomer(int bookingId, int custId) {
 
-	    // 1. Find customer
 	    Optional<Customer> optionalCustomer = customerRepo.findById((long) custId);
 	    if (optionalCustomer.isEmpty()) {
 	        throw new RuntimeException("Customer not found");
 	    }
 
 	    Customer customer = optionalCustomer.get();
-
-	    // 2. Find booking
+	   
 	    Booking bookingToCancel = null;
 	    for (Booking booking : customer.getBookingList()) {
 	        if (booking.getId() == bookingId) {
@@ -159,12 +160,12 @@ public class CustomerService {
 	        throw new BookingNotFoundException("Booking not found for this customer");
 	    }
 
-	    // 3. Validate status (optional but recommended)
+	   
 	    if ("CANCELLED_BY_CUSTOMER".equalsIgnoreCase(bookingToCancel.getBookingStatus())) {
 	        throw new BookingNotFoundException("Booking already cancelled");
 	    }
 
-	    // 4. Update booking status
+	   
 	    bookingToCancel.setBookingStatus("CANCELLED_BY_CUSTOMER");
 	    
 	 // 5. Update DRIVER + VEHICLE status
@@ -177,12 +178,19 @@ public class CustomerService {
 	    
 	    
 
+
 	    // 6. Increase penalty COUNT only
 	    customer.setPenalty(customer.getPenalty() + 1);
 
 	    // 7. Save customer (booking saved via cascade)
+	  
+	    customer.setPenalty(customer.getPenalty() + 1);
+
+	  
+
 	    customerRepo.save(customer);
 	    driverRepo.save(driver); 
+
 
 	 // 8. Response
 	    ResponseStructure<Customer> response = new ResponseStructure<>();
@@ -192,7 +200,4 @@ public class CustomerService {
 
 	    return new ResponseEntity<>(response, HttpStatus.OK);
 	}
-
-
-
 }

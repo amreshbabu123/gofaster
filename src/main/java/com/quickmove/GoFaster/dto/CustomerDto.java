@@ -9,7 +9,7 @@ public class CustomerDto {
 	private String emailId;
 	private double latitude;
 	private double longitude;
-	
+
 	public String getName() {
 		return name;
 	}

@@ -19,7 +19,7 @@ public class LocationIQService {
     private final RestTemplate restTemplate = new RestTemplate();
     private final ObjectMapper mapper = new ObjectMapper();
 
-    // Get coordinates for a given city
+   
     public double[] getCoordinates(String city) {
         try {
             String q = URLEncoder.encode(city, StandardCharsets.UTF_8);
@@ -40,7 +40,7 @@ public class LocationIQService {
         }
     }
 
-    // Reverse geocoding
+ 
     public String getAddressFromCoordinates(double lat, double lon) {
         try {
             String url =

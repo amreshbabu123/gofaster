@@ -23,7 +23,7 @@ public class RegisterDriverVehiclesDtoService {
 	    public ResponseEntity<ResponseStructure<Driver>> saveRegisterDriverVehiclesDto(
 	            RegisterDriverVehiclesDto registerDriverVehicleDto) {
 
-	        // Create Vehicle
+	       
 	        Vehicle vehicle = new Vehicle();
 	        vehicle.setVehicleName(registerDriverVehicleDto.getVehicleName());
 	        vehicle.setVehicleNo(String.valueOf(registerDriverVehicleDto.getVehicleNo()));
@@ -33,7 +33,7 @@ public class RegisterDriverVehiclesDtoService {
 
 	        vehicleRepo.save(vehicle);
 
-	        // Create Driver
+	      
 	        Driver driver = new Driver();
 	        driver.setLicenceNo(String.valueOf(registerDriverVehicleDto.getLicenceNo()));
 	        driver.setUpiId(String.valueOf(registerDriverVehicleDto.getUpiId()));
@@ -48,7 +48,7 @@ public class RegisterDriverVehiclesDtoService {
 
 	        Driver savedDriver = driverRepo.save(driver);
 
-	        // Prepare response
+	    
 	        ResponseStructure<Driver> response = new ResponseStructure<>();
 	        response.setStatuscode(HttpStatus.CREATED.value());
 	        response.setMessage("Driver and vehicle registered successfully");

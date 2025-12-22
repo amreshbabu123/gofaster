@@ -2,17 +2,17 @@ package com.quickmove.GoFaster.dto;
 
 public class BookVehicleDto {
 	
-	private String customerMobileNo;
+	private Long customerMobileNo;
     private Long driverMobileNo;
     private String sourceLocation;
     private String destinationLocation;
     
     
-    public String getCustomerMobileNo() {
+    public Long getCustomerMobileNo() {
         return customerMobileNo;
     }
 
-    public void setCustomerMobileNo(String customerMobileNo) {
+    public void setCustomerMobileNo(Long customerMobileNo) {
         this.customerMobileNo = customerMobileNo;
     }
 
