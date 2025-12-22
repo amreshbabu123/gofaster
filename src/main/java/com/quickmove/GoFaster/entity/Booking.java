@@ -1,6 +1,8 @@
 package com.quickmove.GoFaster.entity;
 
-import java.time.LocalDateTime; 
+import java.time.LocalDateTime;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
