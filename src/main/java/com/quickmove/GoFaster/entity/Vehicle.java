@@ -18,7 +18,7 @@ public class Vehicle {
 	    private String vehicleModel;
 	    private String vehiclecapaCity;
 	    private String vehiclecurrentCity;
-	    private String vehicleavailabilityStatus="AVAILABLE";
+	    private String vehicleavailabilityStatus="Available";
 	    private double pricePerKm;
 	    private int averageSpeed=60;
 	    @OneToOne(cascade = CascadeType.ALL)
