@@ -96,7 +96,7 @@ public class VehicleService {
             double fare = Math.round(v.getPricePerKm() * ors.getDistanceKm() * 100.0) / 100.0;
 
             VehicleDetails vd = new VehicleDetails();
-            vd.setVehicle1(vdto);
+            vd.setVehicle(vdto);
             vd.setFare(fare);
             vd.setEstimatedTime(Math.round(ors.getTimeHours() * 100.0) / 100.0);
 

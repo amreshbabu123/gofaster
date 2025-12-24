@@ -28,7 +28,7 @@ public class Booking {
     private double fare;
     private double estimatedTimeRequired;
     private LocalDateTime bookingDate;
-    private String bookingStatus; // ACTIVE, COMPLETED, CANCELLED
+    private String bookingStatus;
     private String paymentStatus = "not paid";
     
     @Column(nullable = true)
@@ -42,14 +42,19 @@ public class Booking {
 
     @ManyToOne
     @JoinColumn(name = "driver_id")
-    private Driver driver;       // Many bookings → One driver
+    private Driver driver;      
 
     @ManyToOne
-    private Vehicle vehicle;     // Many bookings → One vehicle
+    private Vehicle vehicle;     
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "payment_id")
-    private Payments payment;    // One booking → One payment
+    private Payments payment;  
+    
+    
+    
+    
+    
 
     public Long getId() {
         return id;

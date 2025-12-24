@@ -27,7 +27,7 @@ public class Customer {
 	    private double latitude;
 	    private double longitude;
 	    private String currentLocation;
-        // Customer has multiple bookings
+   
 	    @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
 	    @JsonIgnore
 	    private List<Booking> bookingList;
@@ -39,7 +39,6 @@ public class Customer {
 	    @OneToOne
 	    @JoinColumn(name = "user_id", nullable = true)
 	    private Userr user;
-
 
 	    
 		public Long getId() {
@@ -154,7 +153,8 @@ public class Customer {
 		public String toString() {
 			return "Customer [id=" + id + ", name=" + name + ", age=" + age + ", gender=" + gender + ", mobileNo="
 					+ mobileNo + ", emailId=" + emailId + ", latitude=" + latitude + ", longitude=" + longitude
-					+ ", currentLocation=" + currentLocation + ", bookingList=" + bookingList + ", activeBookingFlag="
-					+ activeBookingFlag + ",penalty="+penalty+"User="+user+"]";
+					+ ", currentLocation=" + currentLocation + ", bookingList=" + bookingList + ", activeBookingFlag="	+ activeBookingFlag + ",penalty="+penalty+"User="+user+"]"
+					+ activeBookingFlag + ", penalty=" + penalty + "]";
 		}
+		
 }

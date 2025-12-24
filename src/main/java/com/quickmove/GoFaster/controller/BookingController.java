@@ -1,6 +1,6 @@
 package com.quickmove.GoFaster.controller;
 
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestController; 
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -30,8 +30,7 @@ public class BookingController {
 	 
 	 @GetMapping("/seeactivebookingforcustomer")
 	 public ResponseEntity<ResponseStructure<Booking>> customeractiveBooking(@RequestParam long mobileNo){
-		 return bookingService.customeractiveBooking(mobileNo);
-		 
+		 return bookingService.customeractiveBooking(mobileNo); 
 	 }
 	 
 	 @GetMapping("/driverActiveBooking")

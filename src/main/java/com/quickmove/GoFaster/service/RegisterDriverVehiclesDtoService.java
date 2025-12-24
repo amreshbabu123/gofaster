@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.quickmove.GoFaster.dto.RegisterDriverVehiclesDto;
 import com.quickmove.GoFaster.entity.Driver;
-import com.quickmove.GoFaster.entity.User;
 import com.quickmove.GoFaster.entity.Userr;
 import com.quickmove.GoFaster.entity.Vehicle;
 import com.quickmove.GoFaster.repository.DriverRepository;

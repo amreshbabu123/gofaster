@@ -1,6 +1,6 @@
 package com.quickmove.GoFaster.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowired; 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,6 +46,5 @@ public class DriverController {
 	    public ResponseEntity<ResponseStructure<Driver>> driverCancelTheBooking(@RequestParam long driverId,@RequestParam long bookingId) {
            return driverService.driverCancelTheBooking(driverId, bookingId);
 	    }
-
 }
 

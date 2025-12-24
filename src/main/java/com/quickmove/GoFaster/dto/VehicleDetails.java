@@ -3,6 +3,7 @@ package com.quickmove.GoFaster.dto;
 public class VehicleDetails {
 
 	private VehicleDto vehicle;
+	private Long driverMobileNo;
     private double fare;
     private double estimatedTime;
 
@@ -10,8 +11,15 @@ public class VehicleDetails {
 		return vehicle;
 	}
 
-	public void setVehicle1(VehicleDto vehicle) {
+	public void setVehicle(VehicleDto vehicle) {
 		this.vehicle = vehicle;
+	}
+	public Long getDriverMobileNo() {
+		return driverMobileNo;
+	}
+
+	public void setDriverMobileNo(Long driverMobileNo) {
+		this.driverMobileNo = driverMobileNo;
 	}
 
 	public double getFare() {
@@ -30,19 +38,22 @@ public class VehicleDetails {
         this.estimatedTime = estimatedTime;
     }
 
-    public VehicleDetails(VehicleDto vehicle, double fare, double estimatedTime) {
-        this.vehicle = vehicle;
-        this.fare = fare;
-        this.estimatedTime = estimatedTime;
-    }
+	public VehicleDetails(VehicleDto vehicle, Long driverMobileNo, double fare, double estimatedTime) {
+		super();
+		this.vehicle = vehicle;
+		this.driverMobileNo = driverMobileNo;
+		this.fare = fare;
+		this.estimatedTime = estimatedTime;
+	}
 
-    public VehicleDetails() {
-    }
+	public VehicleDetails() {
+		super();
+	}
 
 	@Override
 	public String toString() {
-		return "VehicleDetails [vehicle=" + vehicle + ", fare=" + fare + ", estimatedTime=" + estimatedTime + "]";
+		return "VehicleDetails [vehicle=" + vehicle + ", driverMobileNo=" + driverMobileNo + ", fare=" + fare
+				+ ", estimatedTime=" + estimatedTime + "]";
 	}
-
 }
 

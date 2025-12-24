@@ -19,6 +19,12 @@ public class RegisterDriverVehiclesDto {
 	private double pricePerKm;
 	private String password;
 	
+	public Long getMobileNo() {
+		return mobileNo;
+	}
+	public void setMobileNo(Long mobileNo) {
+		this.mobileNo = mobileNo;
+	}
 	public String getLicenceNo() {
 		return licenceNo;
 	}
@@ -141,5 +147,4 @@ public class RegisterDriverVehiclesDto {
 				+ ", vehicleCapacity=" + vehicleCapacity + ", latitude=" + latitude + ", longitude=" + longitude
 				+ ", pricePerKm=" + pricePerKm + ",password"+password+"]";
 	}
-		 
 }

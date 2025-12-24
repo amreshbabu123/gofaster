@@ -1,7 +1,7 @@
 package com.quickmove.GoFaster.entity;
 
 
-import java.time.LocalDateTime;
+import java.time.LocalDateTime; 
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -171,6 +171,7 @@ public class Driver {
 			return "Driver [id=" + id + ", licenceNo=" + licenceNo + ", upiId=" + upiId + ", name=" + name + ", status="
 					+ status + ", age=" + age + ", mobileNo=" + mobileNo + ", gender=" + gender + ", mailId=" + mailId
 					+ ", latitude=" + latitude + ", longitude=" + longitude + ", currentAddress=" + currentAddress
-					+ ", blockedAt=" + blockedAt + ", vehicle=" + vehicle + ", bookingList=" + bookingList + "user="+user+"]";
-		}	
+					+ ", blockedAt=" + blockedAt + ", vehicle=" + vehicle + ", bookingList=" + bookingList + "user="+user+"]"
+					+ ", blockedAt=" + blockedAt + ", vehicle=" + vehicle + ", bookingList=" + bookingList + "]";
+		}
 }
