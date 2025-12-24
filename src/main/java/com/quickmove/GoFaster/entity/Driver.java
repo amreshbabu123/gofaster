@@ -11,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
@@ -36,6 +37,11 @@ public class Driver {
 	    @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL)
 	    @JsonIgnore
 	    private List<Booking> bookingList;
+	    @OneToOne
+	    @JoinColumn(name = "user_id", nullable = true)
+	    private Userr user;
+
+	    
 	    
 		public List<Booking> getBookingList() {
 			return bookingList;
@@ -128,9 +134,17 @@ public class Driver {
 	    public void setBlockedAt(LocalDateTime blockedAt) {
 	        this.blockedAt = blockedAt;
 	    }
+	    
+	    
+		public Userr getUser() {
+			return user;
+		}
+		public void setUser(Userr user) {
+			this.user = user;
+		}
 		public Driver(Long id, String licenceNo, String upiId, String name, String status, int age, Long mobileNo,
 				String gender, String mailId, double latitude, double longitude, String currentAddress,
-				LocalDateTime blockedAt, Vehicle vehicle, List<Booking> bookingList) {
+				LocalDateTime blockedAt, Vehicle vehicle, List<Booking> bookingList,Userr user) {
 			super();
 			this.id = id;
 			this.licenceNo = licenceNo;
@@ -147,6 +161,7 @@ public class Driver {
 			this.blockedAt = blockedAt;
 			this.vehicle = vehicle;
 			this.bookingList = bookingList;
+			this.user=user;
 		}
 		public Driver() {
 			super();
@@ -156,6 +171,7 @@ public class Driver {
 			return "Driver [id=" + id + ", licenceNo=" + licenceNo + ", upiId=" + upiId + ", name=" + name + ", status="
 					+ status + ", age=" + age + ", mobileNo=" + mobileNo + ", gender=" + gender + ", mailId=" + mailId
 					+ ", latitude=" + latitude + ", longitude=" + longitude + ", currentAddress=" + currentAddress
+					+ ", blockedAt=" + blockedAt + ", vehicle=" + vehicle + ", bookingList=" + bookingList + "user="+user+"]"
 					+ ", blockedAt=" + blockedAt + ", vehicle=" + vehicle + ", bookingList=" + bookingList + "]";
 		}
 }

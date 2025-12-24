@@ -9,7 +9,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Customer {
@@ -34,6 +36,10 @@ public class Customer {
 	    
 	    private Double penalty=(double) 0;
 	    
+	    @OneToOne
+	    @JoinColumn(name = "user_id", nullable = true)
+	    private Userr user;
+
 	    
 		public Long getId() {
 			return id;
@@ -113,9 +119,18 @@ public class Customer {
 		public void setPenalty(Double penalty) {
 			this.penalty = penalty;
 		}
+		
+		
+		
+		public Userr getUser() {
+			return user;
+		}
+		public void setUser(Userr user) {
+			this.user = user;
+		}
 		public Customer(Long id, String name, int age, String gender, Long mobileNo, String emailId, double latitude,
 				double longitude, String currentLocation, List<Booking> bookingList, boolean activeBookingFlag,
-				Double penalty) {
+				Double penalty,Userr user) {
 			super();
 			this.id = id;
 			this.name = name;
@@ -129,6 +144,7 @@ public class Customer {
 			this.bookingList = bookingList;
 			this.activeBookingFlag = activeBookingFlag;
 			this.penalty = penalty;
+			this.user=user;
 		}
 		public Customer() {
 			super();
@@ -137,7 +153,7 @@ public class Customer {
 		public String toString() {
 			return "Customer [id=" + id + ", name=" + name + ", age=" + age + ", gender=" + gender + ", mobileNo="
 					+ mobileNo + ", emailId=" + emailId + ", latitude=" + latitude + ", longitude=" + longitude
-					+ ", currentLocation=" + currentLocation + ", bookingList=" + bookingList + ", activeBookingFlag="
+					+ ", currentLocation=" + currentLocation + ", bookingList=" + bookingList + ", activeBookingFlag="	+ activeBookingFlag + ",penalty="+penalty+"User="+user+"]"
 					+ activeBookingFlag + ", penalty=" + penalty + "]";
 		}
 		

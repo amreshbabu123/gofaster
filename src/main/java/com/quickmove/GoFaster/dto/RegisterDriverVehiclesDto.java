@@ -17,6 +17,7 @@ public class RegisterDriverVehiclesDto {
 	private double latitude;
 	private double longitude;
 	private double pricePerKm;
+	private String password;
 	
 	public Long getMobileNo() {
 		return mobileNo;
@@ -59,6 +60,12 @@ public class RegisterDriverVehiclesDto {
 	}
 	public void setGender(String gender) {
 		this.gender = gender;
+	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	public String getMailId() {
 		return mailId;
@@ -108,9 +115,10 @@ public class RegisterDriverVehiclesDto {
 	public void setPricePerKm(double pricePerKm) {
 		this.pricePerKm = pricePerKm;
 	}
+	
 	public RegisterDriverVehiclesDto(String licenceNo, String upiId, String driverName, int age, Long mobileNo,
 			String gender, String mailId, String vehicleName, String vehicleNo, String vehicleType,
-			String vehicleCapacity, double latitude, double longitude, double pricePerKm) {
+			String vehicleCapacity, double latitude, double longitude, double pricePerKm,String password) {
 		super();
 		this.licenceNo = licenceNo;
 		this.upiId = upiId;
@@ -126,6 +134,7 @@ public class RegisterDriverVehiclesDto {
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.pricePerKm = pricePerKm;
+		this.password=password;
 	}
 	public RegisterDriverVehiclesDto() {
 		super();
@@ -136,6 +145,6 @@ public class RegisterDriverVehiclesDto {
 				+ ", age=" + age + ", mobileNo=" + mobileNo + ", gender=" + gender + ", mailId=" + mailId
 				+ ", vehicleName=" + vehicleName + ", vehicleNo=" + vehicleNo + ", vehicleType=" + vehicleType
 				+ ", vehicleCapacity=" + vehicleCapacity + ", latitude=" + latitude + ", longitude=" + longitude
-				+ ", pricePerKm=" + pricePerKm + "]";
+				+ ", pricePerKm=" + pricePerKm + ",password"+password+"]";
 	}
 }

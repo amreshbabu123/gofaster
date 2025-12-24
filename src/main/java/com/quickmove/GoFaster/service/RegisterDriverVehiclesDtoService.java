@@ -6,8 +6,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import com.quickmove.GoFaster.dto.RegisterDriverVehiclesDto;
 import com.quickmove.GoFaster.entity.Driver;
+import com.quickmove.GoFaster.entity.Userr;
 import com.quickmove.GoFaster.entity.Vehicle;
 import com.quickmove.GoFaster.repository.DriverRepository;
+import com.quickmove.GoFaster.repository.UserRepo;
 import com.quickmove.GoFaster.repository.VehicleRepository;
 import com.quickmove.GoFaster.util.ResponseStructure;
 
@@ -19,11 +21,14 @@ public class RegisterDriverVehiclesDtoService {
 
 	    @Autowired
 	    private VehicleRepository vehicleRepo;
+	    
+	    @Autowired
+	    private UserRepo userRepo;
 
 	    public ResponseEntity<ResponseStructure<Driver>> saveRegisterDriverVehiclesDto(
 	            RegisterDriverVehiclesDto registerDriverVehicleDto) {
 
-	       
+	        // Create Vehicle
 	        Vehicle vehicle = new Vehicle();
 	        vehicle.setVehicleName(registerDriverVehicleDto.getVehicleName());
 	        vehicle.setVehicleNo(String.valueOf(registerDriverVehicleDto.getVehicleNo()));
@@ -32,8 +37,17 @@ public class RegisterDriverVehiclesDtoService {
 	        vehicle.setPricePerKm(registerDriverVehicleDto.getPricePerKm());
 
 	        vehicleRepo.save(vehicle);
+	        
+	        //save user
+	        Userr user=new Userr();
+	        user.setMobileno(registerDriverVehicleDto.getMobileNumber());
+	        user.setRole("Driver");
+	        user.setPassword(registerDriverVehicleDto.getPassword());
+	        
+	        userRepo.save(user);
+	        
 
-	      
+	        // Create Driver
 	        Driver driver = new Driver();
 	        driver.setLicenceNo(String.valueOf(registerDriverVehicleDto.getLicenceNo()));
 	        driver.setUpiId(String.valueOf(registerDriverVehicleDto.getUpiId()));
@@ -45,10 +59,11 @@ public class RegisterDriverVehiclesDtoService {
 	        driver.setLatitude(registerDriverVehicleDto.getLatitude());
 	        driver.setLongitude(registerDriverVehicleDto.getLongitude());
 	        driver.setVehicle(vehicle);
+	        driver.setUser(user);
 
 	        Driver savedDriver = driverRepo.save(driver);
-
-	    
+	        
+	        // Prepare response
 	        ResponseStructure<Driver> response = new ResponseStructure<>();
 	        response.setStatuscode(HttpStatus.CREATED.value());
 	        response.setMessage("Driver and vehicle registered successfully");
