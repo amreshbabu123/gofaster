@@ -16,10 +16,12 @@ import com.quickmove.GoFaster.dto.RideDetailsDto;
 import com.quickmove.GoFaster.entity.Booking;
 import com.quickmove.GoFaster.entity.Customer;
 import com.quickmove.GoFaster.entity.Driver;
+import com.quickmove.GoFaster.entity.Userr;
 import com.quickmove.GoFaster.exception.BookingNotFoundException;
 import com.quickmove.GoFaster.exception.CustomerNotFoundException;
 import com.quickmove.GoFaster.repository.CustomerRepository;
 import com.quickmove.GoFaster.repository.DriverRepository;
+import com.quickmove.GoFaster.repository.UserRepo;
 import com.quickmove.GoFaster.util.ResponseStructure;
 
 @Service
@@ -28,9 +30,19 @@ public class CustomerService {
 	    private CustomerRepository customerRepo;
 	 @Autowired
 	 private DriverRepository driverRepo;
+	 @Autowired
+	    private UserRepo userRepo;
 
 	 public ResponseEntity<ResponseStructure<Customer>> registerCustomer(CustomerDto customerDto)  {
-
+		 
+		//save user
+	        Userr user=new Userr();
+	        user.setMobileno(customerDto.getMobileNo());
+	        user.setRole("CUSTOMER");
+	        user.setPassword(customerDto.getPassword());
+	        
+	        userRepo.save(user);
+	        
 	        Customer c = new Customer();
 	        c.setName(customerDto.getName());
 	        c.setAge(customerDto.getAge());
@@ -40,6 +52,9 @@ public class CustomerService {
 	        c.setLatitude(customerDto.getLatitude());
 	        c.setLongitude(customerDto.getLongitude());
             c.setCurrentLocation("hyderabad");
+            c.setUser(user);
+            
+            
 	        customerRepo.save(c);
 	        
 	        ResponseStructure<Customer> response = new ResponseStructure<Customer>();

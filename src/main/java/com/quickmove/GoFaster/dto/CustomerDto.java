@@ -9,6 +9,7 @@ public class CustomerDto {
 	private String emailId;
 	private double latitude;
 	private double longitude;
+	private String password;
 	
 	public String getName() {
 		return name;
@@ -52,5 +53,12 @@ public class CustomerDto {
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
 	}
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
 
 }
