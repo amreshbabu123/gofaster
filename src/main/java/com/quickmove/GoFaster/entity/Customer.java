@@ -36,10 +36,10 @@ public class Customer {
 	    
 	    private Double penalty=(double) 0;
 	    
-	    @OneToOne
-	    @JoinColumn(name = "user_id", nullable = true)
+	    @OneToOne(cascade = CascadeType.ALL)
+	    @JoinColumn(name = "user_id", nullable = false)
 	    private Userr user;
-
+  
 	    
 		public Long getId() {
 			return id;

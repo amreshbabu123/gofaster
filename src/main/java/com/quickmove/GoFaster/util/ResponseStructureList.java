@@ -1,6 +1,6 @@
 package com.quickmove.GoFaster.util;
 
-import java.util.List;  
+import java.util.List;   
 
 import org.springframework.stereotype.Component;
 

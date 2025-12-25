@@ -1,17 +1,20 @@
 package com.quickmove.GoFaster.service;
 
-import org.springframework.beans.factory.annotation.Autowired; 
+import org.springframework.beans.factory.annotation.Autowired;  
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.quickmove.GoFaster.dto.RegisterDriverVehiclesDto;
 import com.quickmove.GoFaster.entity.Driver;
 import com.quickmove.GoFaster.entity.Userr;
 import com.quickmove.GoFaster.entity.Vehicle;
 import com.quickmove.GoFaster.repository.DriverRepository;
-import com.quickmove.GoFaster.repository.UserRepo;
+import com.quickmove.GoFaster.repository.UserRepository;
 import com.quickmove.GoFaster.repository.VehicleRepository;
 import com.quickmove.GoFaster.util.ResponseStructure;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class RegisterDriverVehiclesDtoService {
@@ -23,47 +26,51 @@ public class RegisterDriverVehiclesDtoService {
 	    private VehicleRepository vehicleRepo;
 	    
 	    @Autowired
-	    private UserRepo userRepo;
+	    private UserRepository userRepo;
+	    @Autowired
+	     private PasswordEncoder passwordEncoder;
 
-	    public ResponseEntity<ResponseStructure<Driver>> saveRegisterDriverVehiclesDto(
-	            RegisterDriverVehiclesDto registerDriverVehicleDto) {
+        @Transactional
+	    public ResponseEntity<ResponseStructure<Driver>> registerDriver(RegisterDriverVehiclesDto dto) {
 
-	        // Create Vehicle
-	        Vehicle vehicle = new Vehicle();
-	        vehicle.setVehicleName(registerDriverVehicleDto.getVehicleName());
-	        vehicle.setVehicleNo(String.valueOf(registerDriverVehicleDto.getVehicleNo()));
-	        vehicle.setVehicleType(registerDriverVehicleDto.getVehicleType());
-	        vehicle.setVehiclecapaCity(registerDriverVehicleDto.getVehicleCapacity());
-	        vehicle.setPricePerKm(registerDriverVehicleDto.getPricePerKm());
+	        // ❌ Check duplicate mobile
+	        if(userRepo.findByMobileno(dto.getMobileNumber()).isPresent()) {
+	            throw new RuntimeException("Mobile number already exists!");
+	        }
 
-	        vehicleRepo.save(vehicle);
-	        
-	        //save user
-	        Userr user=new Userr();
-	        user.setMobileno(registerDriverVehicleDto.getMobileNumber());
-	        user.setRole("Driver");
-	        user.setPassword(registerDriverVehicleDto.getPassword());
-	        
+	        // 1️⃣ Create User for driver
+	        Userr user = new Userr();
+	        user.setMobileno(dto.getMobileNumber());
+	        user.setPassword(passwordEncoder.encode(dto.getPassword()));
+	        user.setRole("DRIVER");
 	        userRepo.save(user);
-	        
 
-	        // Create Driver
+	        // 2️⃣ Create Vehicle
+	        Vehicle vehicle = new Vehicle();
+	        vehicle.setVehicleName(dto.getVehicleName());
+	        vehicle.setVehicleNo(dto.getVehicleNo());
+	        vehicle.setVehicleType(dto.getVehicleType());
+	        vehicle.setVehiclecapaCity(dto.getVehicleCapacity());
+	        vehicle.setPricePerKm(dto.getPricePerKm());
+	        vehicleRepo.save(vehicle);
+
+	        // 3️⃣ Create Driver
 	        Driver driver = new Driver();
-	        driver.setLicenceNo(String.valueOf(registerDriverVehicleDto.getLicenceNo()));
-	        driver.setUpiId(String.valueOf(registerDriverVehicleDto.getUpiId()));
-	        driver.setName(registerDriverVehicleDto.getDriverName());
-	        driver.setAge(registerDriverVehicleDto.getAge());
-	        driver.setMobileNo(registerDriverVehicleDto.getMobileNumber());
-	        driver.setGender(String.valueOf(registerDriverVehicleDto.getGender()));
-	        driver.setMailId(registerDriverVehicleDto.getMailId());
-	        driver.setLatitude(registerDriverVehicleDto.getLatitude());
-	        driver.setLongitude(registerDriverVehicleDto.getLongitude());
-	        driver.setVehicle(vehicle);
+	        driver.setName(dto.getDriverName());
+	        driver.setAge(dto.getAge());
+	        driver.setGender(dto.getGender());
+	        driver.setMobileNo(dto.getMobileNumber());
+	        driver.setMailId(dto.getMailId());
+	        driver.setLicenceNo(dto.getLicenceNo());
+	        driver.setUpiId(dto.getUpiId());
+	        driver.setLatitude(dto.getLatitude());
+	        driver.setLongitude(dto.getLongitude());
 	        driver.setUser(user);
+	        driver.setVehicle(vehicle);
 
 	        Driver savedDriver = driverRepo.save(driver);
-	        
-	        // Prepare response
+
+	        // 4️⃣ Response
 	        ResponseStructure<Driver> response = new ResponseStructure<>();
 	        response.setStatuscode(HttpStatus.CREATED.value());
 	        response.setMessage("Driver and vehicle registered successfully");

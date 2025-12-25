@@ -1,7 +1,7 @@
 package com.quickmove.GoFaster.entity;
 
 
-import java.time.LocalDateTime; 
+import java.time.LocalDateTime;  
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -37,10 +37,11 @@ public class Driver {
 	    @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL)
 	    @JsonIgnore
 	    private List<Booking> bookingList;
+	    
 	    @OneToOne
 	    @JoinColumn(name = "user_id", nullable = true)
 	    private Userr user;
-
+	    
 	    
 	    
 		public List<Booking> getBookingList() {
@@ -134,8 +135,6 @@ public class Driver {
 	    public void setBlockedAt(LocalDateTime blockedAt) {
 	        this.blockedAt = blockedAt;
 	    }
-	    
-	    
 		public Userr getUser() {
 			return user;
 		}
@@ -144,7 +143,7 @@ public class Driver {
 		}
 		public Driver(Long id, String licenceNo, String upiId, String name, String status, int age, Long mobileNo,
 				String gender, String mailId, double latitude, double longitude, String currentAddress,
-				LocalDateTime blockedAt, Vehicle vehicle, List<Booking> bookingList,Userr user) {
+				LocalDateTime blockedAt, Vehicle vehicle, List<Booking> bookingList, Userr user) {
 			super();
 			this.id = id;
 			this.licenceNo = licenceNo;
@@ -161,8 +160,9 @@ public class Driver {
 			this.blockedAt = blockedAt;
 			this.vehicle = vehicle;
 			this.bookingList = bookingList;
-			this.user=user;
+			this.user = user;
 		}
+		
 		public Driver() {
 			super();
 		}
@@ -171,7 +171,7 @@ public class Driver {
 			return "Driver [id=" + id + ", licenceNo=" + licenceNo + ", upiId=" + upiId + ", name=" + name + ", status="
 					+ status + ", age=" + age + ", mobileNo=" + mobileNo + ", gender=" + gender + ", mailId=" + mailId
 					+ ", latitude=" + latitude + ", longitude=" + longitude + ", currentAddress=" + currentAddress
-					+ ", blockedAt=" + blockedAt + ", vehicle=" + vehicle + ", bookingList=" + bookingList + "user="+user+"]"
-					+ ", blockedAt=" + blockedAt + ", vehicle=" + vehicle + ", bookingList=" + bookingList + "]";
+					+ ", blockedAt=" + blockedAt + ", vehicle=" + vehicle + ", bookingList=" + bookingList + ", user="
+					+ user + "]";
 		}
 }

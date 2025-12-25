@@ -32,7 +32,6 @@ public class DriverService {
     @Autowired
     private BookingRepository bookingRepository;
 
-
     public ResponseEntity<ResponseStructure<Driver>> deleteDriverByMobileNo(Long mobileNo) {
 
         Driver driver = driverRepository.findByMobileNo(mobileNo);

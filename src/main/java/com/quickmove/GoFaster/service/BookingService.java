@@ -47,7 +47,7 @@ public class BookingService {
             throw new CustomerNotFoundException("Customer not found");
         }
 
-        Driver driver = driverRepo.findByMobileNo(bookVehicleDto.getDriverMobileNo());
+         Driver driver = driverRepo.findByMobileNo(bookVehicleDto.getDriverMobileNo());
 
         if (driver == null) {
             throw new DriverMobileNoNotFound("Driver not found");
