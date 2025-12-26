@@ -1,12 +1,11 @@
 package com.quickmove.GoFaster.security;
 
-import java.util.Map;
+import java.util.Map; 
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import com.quickmove.GoFaster.dto.CustomerDto;
@@ -18,7 +17,6 @@ import com.quickmove.GoFaster.repository.UserRepository;
 import com.quickmove.GoFaster.service.CustomerService;
 import com.quickmove.GoFaster.service.RegisterDriverVehiclesDtoService;
 import com.quickmove.GoFaster.util.ResponseStructure;
-import org.springframework.security.authentication.BadCredentialsException;
 
 @RestController
 @RequestMapping("/auth")

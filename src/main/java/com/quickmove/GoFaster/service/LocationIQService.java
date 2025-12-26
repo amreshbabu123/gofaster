@@ -41,7 +41,7 @@ public class LocationIQService {
     }
 
  
-    public String getAddressFromCoordinates(double lat, double lon) {
+    public String getCityFromCoordinates(double lat, double lon) {
         try {
             String url =
                     "https://us1.locationiq.com/v1/reverse?key=" + apiKey +
@@ -49,12 +49,24 @@ public class LocationIQService {
 
             JsonNode response = mapper.readTree(restTemplate.getForObject(url, String.class));
 
-            return response.get("display_name").asText();
+            JsonNode address = response.get("address");
+
+            // Try to get city, town, or village
+            if (address.has("city")) {
+                return address.get("city").asText();
+            } else if (address.has("town")) {
+                return address.get("town").asText();
+            } else if (address.has("village")) {
+                return address.get("village").asText();
+            } else {
+                return "Unknown City";
+            }
 
         } catch (Exception e) {
             System.err.println("Reverse Geo Error: " + e.getMessage());
-            return "Unknown Location";
+            return "Unknown City";
         }
     }
+
     
 }

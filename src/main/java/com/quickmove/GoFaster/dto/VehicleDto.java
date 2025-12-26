@@ -8,7 +8,7 @@ public class VehicleDto {
 	    private String vehicleModel;
 	    private String vehiclecapaCity;
 	    private String vehiclecurrentCity;
-	    private String vehicleavailabilityStatus="AVAILABLE";
+	    private String vehicleavailabilityStatus="Available";
 	    private double pricePerKm;
 	    private int averageSpeed;
 		public Long getId() {

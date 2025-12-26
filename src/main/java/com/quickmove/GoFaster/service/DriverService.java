@@ -70,7 +70,7 @@ public class DriverService {
         driver.setLongitude(lon);
 
 
-        String address = locationIQService.getAddressFromCoordinates(lat, lon);
+        String address = locationIQService.getCityFromCoordinates(lat, lon);
         driver.setCurrentAddress(address);
 
         Driver updatedDriver = driverRepository.save(driver);

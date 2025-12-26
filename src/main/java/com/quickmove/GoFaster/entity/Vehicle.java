@@ -1,5 +1,7 @@
 package com.quickmove.GoFaster.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,9 +23,9 @@ public class Vehicle {
 	    private String vehicleavailabilityStatus="Available";
 	    private double pricePerKm;
 	    private int averageSpeed=60;
-	    @OneToOne(cascade = CascadeType.ALL)
+	    @OneToOne(cascade = CascadeType.ALL, mappedBy = "vehicle")
 	    private Driver driver;
-	    
+
 		public Driver getDriver() {
 			return driver;
 		}

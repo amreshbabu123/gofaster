@@ -29,6 +29,8 @@ public class RegisterDriverVehiclesDtoService {
 	    private UserRepository userRepo;
 	    @Autowired
 	     private PasswordEncoder passwordEncoder;
+	    @Autowired
+	    private LocationIQService locationIQService;
 
         @Transactional
 	    public ResponseEntity<ResponseStructure<Driver>> registerDriver(RegisterDriverVehiclesDto dto) {
@@ -45,15 +47,19 @@ public class RegisterDriverVehiclesDtoService {
 	        user.setRole("DRIVER");
 	        userRepo.save(user);
 
-	        // 2️⃣ Create Vehicle
 	        Vehicle vehicle = new Vehicle();
 	        vehicle.setVehicleName(dto.getVehicleName());
 	        vehicle.setVehicleNo(dto.getVehicleNo());
 	        vehicle.setVehicleType(dto.getVehicleType());
 	        vehicle.setVehiclecapaCity(dto.getVehicleCapacity());
 	        vehicle.setPricePerKm(dto.getPricePerKm());
-	        vehicleRepo.save(vehicle);
 
+	        // ✅ Automatically set current city from coordinates
+	        String city = locationIQService.getCityFromCoordinates(dto.getLatitude(), dto.getLongitude());
+	        vehicle.setVehiclecurrentCity(city);
+
+	        vehicleRepo.save(vehicle);
+	        
 	        // 3️⃣ Create Driver
 	        Driver driver = new Driver();
 	        driver.setName(dto.getDriverName());

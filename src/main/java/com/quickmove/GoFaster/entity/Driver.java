@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -34,6 +35,7 @@ public class Driver {
 	    private LocalDateTime blockedAt;
 	    @OneToOne(cascade = CascadeType.ALL)
 	    private Vehicle vehicle;
+	    
 	    @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL)
 	    @JsonIgnore
 	    private List<Booking> bookingList;
