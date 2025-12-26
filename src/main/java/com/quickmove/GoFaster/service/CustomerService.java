@@ -36,6 +36,8 @@ public class CustomerService {
 	 @Autowired
 	    private UserRepository userRepo;
 	 @Autowired
+	    private LocationIQService locationIQService;
+	 @Autowired
      private PasswordEncoder passwordEncoder;
 
 	 @Transactional
@@ -56,7 +58,9 @@ public class CustomerService {
 	     c.setEmailId(customerDto.getEmailId());
 	     c.setLatitude(customerDto.getLatitude());
 	     c.setLongitude(customerDto.getLongitude());
-	     c.setCurrentLocation("hyderabad");
+	     
+	     String currentCity = locationIQService.getCityFromCoordinates(customerDto.getLatitude(), customerDto.getLongitude());
+	     c.setCurrentLocation(currentCity);
 	     c.setUser(savedUser);
 
 	     customerRepo.save(c);
