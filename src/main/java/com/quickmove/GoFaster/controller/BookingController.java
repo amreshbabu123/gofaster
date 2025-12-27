@@ -23,17 +23,18 @@ public class BookingController {
 	 @Autowired 
 	 private BookingService bookingService;
 	 
-	 @PostMapping("/bookVehicle")
+	 
+	 @PostMapping("/customer/bookVehicle")
 	 public ResponseEntity<ResponseStructure<Booking>> bookVehicle(@RequestBody BookVehicleDto bookVehicleDto){
 	     return bookingService.bookVehicle(bookVehicleDto);
 	 }
 	 
-	 @GetMapping("/seeactivebookingforcustomer")
+	 @GetMapping("/customer/activebooking")
 	 public ResponseEntity<ResponseStructure<Booking>> customeractiveBooking(@RequestParam long mobileNo){
 		 return bookingService.customeractiveBooking(mobileNo); 
 	 }
 	 
-	 @GetMapping("/driverActiveBooking")
+	 @GetMapping("/driver/ActiveBooking")
 	 public ResponseEntity<ResponseStructure<Booking>> driverAtiveBooking(@RequestParam long mobileNo){
 		 return bookingService.driverActiveBooking(mobileNo);
 		 

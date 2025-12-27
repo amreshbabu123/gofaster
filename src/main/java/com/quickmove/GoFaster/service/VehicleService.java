@@ -99,6 +99,7 @@ public class VehicleService {
             vd.setVehicle(vdto);
             vd.setFare(fare);
             vd.setEstimatedTime(Math.round(ors.getTimeHours() * 100.0) / 100.0);
+            vd.setDriverMobileNo(v.getDriver().getMobileNo());
 
             detailsList.add(vd);
         }

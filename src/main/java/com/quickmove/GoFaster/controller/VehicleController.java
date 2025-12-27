@@ -16,7 +16,7 @@ public class VehicleController {
    @Autowired
    private VehicleService vehicleService;
 
-    @GetMapping("/seeallavailabilityvehicle")
+    @GetMapping("/customer/seeallavailabilityvehicle")
     public ResponseEntity<ResponseStructure<AvailableVehicleDto>> seeAllAvailabilityVehicle(@RequestParam long mobileNo,@RequestParam String destinationCity) {
      return vehicleService.seeAllAvailabilityVehicle(mobileNo, destinationCity);
 }

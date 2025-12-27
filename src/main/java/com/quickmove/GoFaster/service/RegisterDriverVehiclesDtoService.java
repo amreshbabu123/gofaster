@@ -71,6 +71,8 @@ public class RegisterDriverVehiclesDtoService {
 	        driver.setUpiId(dto.getUpiId());
 	        driver.setLatitude(dto.getLatitude());
 	        driver.setLongitude(dto.getLongitude());
+	        String currentCity = locationIQService.getCityFromCoordinates(dto.getLatitude(), dto.getLongitude());
+	        driver.setCurrentAddress(currentCity);
 	        driver.setUser(user);
 	        driver.setVehicle(vehicle);
 
