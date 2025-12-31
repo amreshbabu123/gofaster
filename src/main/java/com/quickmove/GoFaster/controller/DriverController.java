@@ -42,7 +42,7 @@ public class DriverController {
             return driverService.getDriverBookingHistoryByMobile(mobileNo);
 	    }
 	    
-	    @PostMapping("/driver/cancel-booking")
+	    @PostMapping("/driver/cancelbooking")
 	    public ResponseEntity<ResponseStructure<Driver>> driverCancelTheBooking(@RequestParam long driverId,@RequestParam long bookingId) {
            return driverService.driverCancelTheBooking(driverId, bookingId);
 	    }

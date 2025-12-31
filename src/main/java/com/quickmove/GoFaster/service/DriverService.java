@@ -34,11 +34,9 @@ public class DriverService {
 
     public ResponseEntity<ResponseStructure<Driver>> deleteDriverByMobileNo(Long mobileNo) {
 
-        Driver driver = driverRepository.findByMobileNo(mobileNo);
-
-        if (driver == null) {
-            throw new DriverMobileNoNotFound("Driver not found with mobile: " + mobileNo);
-        }
+    	Driver driver = driverRepository
+    	        .findByMobileNo(mobileNo)
+    	        .orElseThrow(() -> new DriverMobileNoNotFound("Driver not found"));
 
         driverRepository.delete(driver);
 
@@ -55,12 +53,9 @@ public class DriverService {
     public ResponseEntity<ResponseStructure<Driver>> updateCurrentVehicleLocation(
             Long mobileNo, CurrentLocationDTO locationDto) {
 
-        Driver driver = driverRepository.findByMobileNo(mobileNo);
-
-        if (driver == null) {
-            throw new DriverMobileNoNotFound(
-                    "Driver not found with mobile: " + mobileNo);
-        }
+    	Driver driver = driverRepository
+    	        .findByMobileNo(mobileNo)
+    	        .orElseThrow(() -> new DriverMobileNoNotFound("Driver not found"));
 
         double lat = locationDto.getLatitude();
         double lon = locationDto.getLongitude();
@@ -89,12 +84,9 @@ public class DriverService {
 
     public ResponseEntity<ResponseStructure<Driver>> findDriver(long mobileNo) {
 
-        Driver driver = driverRepository.findByMobileNo(mobileNo);
-
-        if (driver == null) {
-            throw new DriverMobileNoNotFound(
-                    "Driver not found with mobile number: " + mobileNo);
-        }
+    	Driver driver = driverRepository
+    	        .findByMobileNo(mobileNo)
+    	        .orElseThrow(() -> new DriverMobileNoNotFound("Driver not found"));
 
         ResponseStructure<Driver> rs = new ResponseStructure<>();
         rs.setStatuscode(HttpStatus.OK.value());

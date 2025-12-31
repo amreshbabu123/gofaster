@@ -19,55 +19,54 @@ import com.quickmove.GoFaster.service.RegisterDriverVehiclesDtoService;
 import com.quickmove.GoFaster.util.ResponseStructure;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/auth") 
 public class AuthController {
-
-    @Autowired
+ 
+    @Autowired 
     private AuthenticationManager authenticationManager;
 
     @Autowired
-    private JwtUtil jwtUtil;
+    private JwtUtil jwtUtil; 
 
     @Autowired
     private CustomerService customerService;
 
     @Autowired
     private RegisterDriverVehiclesDtoService driverService;
-    
+
     @Autowired
     private UserRepository userRepository;
 
-
+    // ✅ CUSTOMER REGISTRATION
     @PostMapping("/registercustomer")
     public ResponseEntity<ResponseStructure<Customer>> registerCustomer(@RequestBody CustomerDto customerDto) {
         return customerService.registerCustomer(customerDto);
     }
 
+    // ✅ DRIVER REGISTRATION
     @PostMapping("/registerdriver")
     public ResponseEntity<ResponseStructure<Driver>> registerDriver(@RequestBody RegisterDriverVehiclesDto dto) {
         return driverService.registerDriver(dto);
     }
 
-    
+    // ✅ LOGIN
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
 
         String mobile = String.valueOf(request.getMobileno());
 
-        // 1. Authenticate
+        // Authenticate
         authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(mobile, request.getPassword())
+                new UsernamePasswordAuthenticationToken(mobile, request.getPassword())
         );
 
-        // 2. Load user from DB
-        Userr user = userRepository
-                .findByMobileno(request.getMobileno())
+        // Load user
+        Userr user = userRepository.findByMobileno(request.getMobileno())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // 3. Generate JWT
+        // Generate JWT
         String token = jwtUtil.generateToken(mobile);
 
-        // 4. Return token + role
         return ResponseEntity.ok(Map.of(
                 "token", token,
                 "role", user.getRole()

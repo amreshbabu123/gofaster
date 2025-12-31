@@ -10,7 +10,7 @@ public class Userr {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "mobileno", unique = true, nullable = false)
     private Long mobileno;
 
     @Column(nullable = false)

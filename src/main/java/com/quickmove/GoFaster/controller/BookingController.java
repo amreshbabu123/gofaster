@@ -34,9 +34,9 @@ public class BookingController {
 		 return bookingService.customeractiveBooking(mobileNo); 
 	 }
 	 
-	 @GetMapping("/driver/ActiveBooking")
+	 @GetMapping("/driver/activebooking")
 	 public ResponseEntity<ResponseStructure<Booking>> driverAtiveBooking(@RequestParam long mobileNo){
-		 return bookingService.driverActiveBooking(mobileNo);
+		 return bookingService.getDriverActiveBooking(mobileNo);
 		 
 	 }
 	 

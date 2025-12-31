@@ -42,6 +42,10 @@ public class CustomerService {
 
 	 @Transactional
 	 public ResponseEntity<ResponseStructure<Customer>> registerCustomer(CustomerDto customerDto) {
+		 
+		 if (customerRepo.findByMobileNo(customerDto.getMobileNo()).isPresent()) {
+		        throw new RuntimeException("Mobile number already registered");
+		    }
 
 	     Userr user = new Userr();
 	     user.setMobileno(customerDto.getMobileNo());
@@ -78,11 +82,9 @@ public class CustomerService {
 	 
     public ResponseEntity<ResponseStructure<Customer>> findByMobile(long mobileNo) {
 
-		    Customer c = customerRepo.findByMobileNo(mobileNo);
-
-		    if (c == null) {
-		        throw new CustomerNotFoundException("Customer not found with mobile: " + mobileNo);
-		    }
+    	Customer c = customerRepo
+    	        .findByMobileNo(mobileNo)
+    	        .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
 
 		    ResponseStructure<Customer> response = new ResponseStructure<>();
 		    response.setStatuscode(HttpStatus.OK.value());
@@ -97,12 +99,9 @@ public class CustomerService {
     
 	public ResponseEntity<ResponseStructure<Customer>> deleteByMobile(long mobileNo) {
 
-		    Customer c = customerRepo.findByMobileNo(mobileNo);
-
-		    if (c == null) {
-		        throw new CustomerNotFoundException(
-		                "Customer not found with mobile: " + mobileNo);
-		    }
+		Customer c = customerRepo
+    	        .findByMobileNo(mobileNo)
+    	        .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
 
 		    customerRepo.delete(c);
 
@@ -119,10 +118,9 @@ public class CustomerService {
 	
 	public ResponseEntity<ResponseStructure<BookingHistoryDto>> getCustomerBookingHistoryByMobile(Long mobileNo) {
 
-		Customer customer = customerRepo.findByMobileNo(mobileNo);
-		if (customer == null) {
-		    throw new CustomerNotFoundException("Customer not found");
-		}
+		Customer customer = customerRepo
+    	        .findByMobileNo(mobileNo)
+    	        .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
 
         List<Booking> bookings = customer.getBookingList();
 

@@ -1,10 +1,11 @@
 package com.quickmove.GoFaster.entity;
 
-import java.util.List;
+import java.util.List; 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,6 +23,7 @@ public class Customer {
 	    private String name;
 	    private int age;
 	    private String gender;
+	    @Column(name = "mobile_no", unique = true, nullable = false)
 	    private Long mobileNo;
 	    private String emailId;
 	    private double latitude;

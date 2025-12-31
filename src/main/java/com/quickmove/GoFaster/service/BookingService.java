@@ -1,6 +1,7 @@
 package com.quickmove.GoFaster.service;
 
-import java.time.LocalDateTime; 
+import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,17 +42,15 @@ public class BookingService {
 
     public ResponseEntity<ResponseStructure<Booking>> bookVehicle(BookVehicleDto bookVehicleDto) {
 
-    	Customer customer = customerRepo.findByMobileNo(bookVehicleDto.getCustomerMobileNo());
+    	Customer customer = customerRepo
+    	        .findByMobileNo(bookVehicleDto.getCustomerMobileNo())
+    	        .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
 
-        if (customer == null) {
-            throw new CustomerNotFoundException("Customer not found");
-        }
 
-         Driver driver = driverRepo.findByMobileNo(bookVehicleDto.getDriverMobileNo());
+    	Driver driver = driverRepo
+    	        .findByMobileNo(bookVehicleDto.getDriverMobileNo())
+    	        .orElseThrow(() -> new DriverMobileNoNotFound("Driver not found"));
 
-        if (driver == null) {
-            throw new DriverMobileNoNotFound("Driver not found");
-        }
 
         if ("booked".equalsIgnoreCase(driver.getStatus())) {
             throw new DriverNotFoundException("Driver is already booked");
@@ -156,47 +155,55 @@ public class BookingService {
 
         ResponseStructure<Booking> structure = new ResponseStructure<>();
 
-        Booking active = bookingRepo.findActiveBooking(mobileNo);
+        List<Booking> activeBookings = bookingRepo.findActiveBookings(mobileNo);
 
-        if (active == null) {
+        if (activeBookings.isEmpty()) {
             structure.setStatuscode(HttpStatus.NOT_FOUND.value());
-            structure.setMessage("No active booking found for this customer");
+            structure.setMessage("No active booking found");
             structure.setData(null);
-
             return new ResponseEntity<>(structure, HttpStatus.NOT_FOUND);
         }
 
+        // Take latest booking
+        Booking latestBooking = activeBookings.get(0);
+
         structure.setStatuscode(HttpStatus.OK.value());
         structure.setMessage("Active booking fetched successfully");
-        structure.setData(active);
+        structure.setData(latestBooking);
 
         return new ResponseEntity<>(structure, HttpStatus.OK);
     }
 
 
+
 		
 		
 
 
-    public ResponseEntity<ResponseStructure<Booking>> driverActiveBooking(long mobileNo) {
+    public ResponseEntity<ResponseStructure<Booking>> getDriverActiveBooking(long driverMobileNo) {
 
-        ResponseStructure<Booking> structure = new ResponseStructure<>();
+        // 1️⃣ Check driver exists
+        Driver driver = driverRepo
+                .findByMobileNo(driverMobileNo)
+                .orElseThrow(() -> new DriverNotFoundException("Driver not found"));
 
-        Booking active = bookingRepo.findDriverActiveBooking(mobileNo);
+        // 2️⃣ Find active booking
+        Booking booking = bookingRepo
+                .findDriverActiveBooking(driverMobileNo)
+                .orElse(null);
 
-        if (active == null) {
-            structure.setStatuscode(HttpStatus.NOT_FOUND.value());
-            structure.setMessage("No active booking found for this driver");
-            structure.setData(null);
+        ResponseStructure<Booking> response = new ResponseStructure<>();
+        response.setStatuscode(HttpStatus.OK.value());
 
-            return new ResponseEntity<>(structure, HttpStatus.NOT_FOUND);
+        if (booking == null) {
+            response.setMessage("No active booking found");
+            response.setData(null);
+        } else {
+            response.setMessage("Active booking fetched successfully");
+            response.setData(booking);
         }
 
-        structure.setStatuscode(HttpStatus.OK.value());
-        structure.setMessage("Active booking fetched successfully");
-        structure.setData(active);
-
-        return new ResponseEntity<>(structure, HttpStatus.OK);
+        return ResponseEntity.ok(response);
     }
 
 

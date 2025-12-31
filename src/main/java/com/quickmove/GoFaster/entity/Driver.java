@@ -8,6 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,6 +27,7 @@ public class Driver {
 	    private String name;
 	    private String status="Available";
 	    private int age;
+	    @Column(name = "mobile_no", unique = true, nullable = false)
 	    private Long mobileNo;
 	    private String gender;
 	    private String mailId;
@@ -34,6 +36,7 @@ public class Driver {
 	    private String currentAddress;
 	    private LocalDateTime blockedAt;
 	    @OneToOne(cascade = CascadeType.ALL)
+        @JsonIgnore
 	    private Vehicle vehicle;
 	    
 	    @OneToMany(mappedBy = "driver", cascade = CascadeType.ALL)
