@@ -40,6 +40,7 @@ public class CustomerController {
 	    @PostMapping("/customer/cancelbooking")
 	    public ResponseEntity<ResponseStructure<Customer>> cancelridebydriver(@RequestParam int bookingId,@RequestParam int custId){
 			return customerService.cancelRideByCustomer(bookingId,custId);
+			
 	    	
 	    }
 }

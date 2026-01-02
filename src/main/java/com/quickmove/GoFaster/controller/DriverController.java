@@ -27,10 +27,11 @@ public class DriverController {
 	    	return driverService.deleteDriverByMobileNo(mobileNo);
 	    }
 
-	    @PutMapping("/updatecurrentvechiclelocation/{mobileNo}")
-	    public ResponseEntity<ResponseStructure<Driver>> updateLocation(@PathVariable Long mobileNo,@RequestBody CurrentLocationDTO locationDto) {
-             return driverService.updateCurrentVehicleLocation(mobileNo, locationDto);
-	        }
+	    @PutMapping("/updatecurrentlocation")
+	    public ResponseEntity<ResponseStructure<?>> updateLocation(@RequestBody CurrentLocationDTO locationDto) {
+	        return driverService.updateCurrentLocation(locationDto);
+	    }
+
 	    
 	    @GetMapping("/finddriverwithmobileno")
 	    public  ResponseEntity<ResponseStructure<Driver>> findDriver(@RequestParam long mobileNo){
@@ -46,5 +47,6 @@ public class DriverController {
 	    public ResponseEntity<ResponseStructure<Driver>> driverCancelTheBooking(@RequestParam long driverId,@RequestParam long bookingId) {
            return driverService.driverCancelTheBooking(driverId, bookingId);
 	    }
+	     
 }
 

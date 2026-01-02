@@ -1,6 +1,6 @@
 package com.quickmove.GoFaster.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowired; 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,7 +19,7 @@ public class PaymentsController {
 
     @PostMapping("/driver/completeride/paybycash")
     public ResponseEntity<ResponseStructure<Payments>> driverCompleteRidePayByCash(@RequestParam Long bookingId) {
-        return paymentsService.driverCompleteRidePayByCash(bookingId);
+        return paymentsService.driverCompleteRidePayByCash(bookingId); 
     }
     
     @PostMapping("/driver/completeride/generatedUPI")
@@ -31,5 +31,6 @@ public class PaymentsController {
     public ResponseEntity<ResponseStructure<Payments>> upiPaymentConfirmed(@RequestParam Long bookingId) {
         return paymentsService.upiPaymentConfirmed(bookingId);
     }
+    
 
 }

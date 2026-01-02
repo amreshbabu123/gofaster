@@ -26,7 +26,7 @@ public class Vehicle {
 	    private int averageSpeed=60;
 	    @OneToOne(cascade = CascadeType.ALL, mappedBy = "vehicle")
 	    @JsonIgnore
-	    private Driver driver;
+	    private Driver driver; 
 
 		public Driver getDriver() {
 			return driver;

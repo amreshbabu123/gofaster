@@ -3,6 +3,7 @@ package com.quickmove.GoFaster.service;
 import java.time.LocalDateTime; 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired; 
 import org.springframework.http.HttpStatus;
@@ -13,11 +14,14 @@ import com.quickmove.GoFaster.dto.BookingHistoryDto;
 import com.quickmove.GoFaster.dto.CurrentLocationDTO;
 import com.quickmove.GoFaster.dto.RideDetailsDto;
 import com.quickmove.GoFaster.entity.Booking;
+import com.quickmove.GoFaster.entity.Customer;
 import com.quickmove.GoFaster.entity.Driver;
 import com.quickmove.GoFaster.exception.BookingNotFoundException;
+import com.quickmove.GoFaster.exception.CustomerNotFoundException;
 import com.quickmove.GoFaster.exception.DriverMobileNoNotFound;
 import com.quickmove.GoFaster.exception.DriverNotFoundException;
 import com.quickmove.GoFaster.repository.BookingRepository;
+import com.quickmove.GoFaster.repository.CustomerRepository;
 import com.quickmove.GoFaster.repository.DriverRepository;
 import com.quickmove.GoFaster.util.ResponseStructure;
 
@@ -31,6 +35,9 @@ public class DriverService {
     
     @Autowired
     private BookingRepository bookingRepository;
+    
+    @Autowired
+    private CustomerRepository customerRepository;
 
     public ResponseEntity<ResponseStructure<Driver>> deleteDriverByMobileNo(Long mobileNo) {
 
@@ -50,33 +57,45 @@ public class DriverService {
 
     
 
-    public ResponseEntity<ResponseStructure<Driver>> updateCurrentVehicleLocation(
-            Long mobileNo, CurrentLocationDTO locationDto) {
-
-    	Driver driver = driverRepository
-    	        .findByMobileNo(mobileNo)
-    	        .orElseThrow(() -> new DriverMobileNoNotFound("Driver not found"));
-
-        double lat = locationDto.getLatitude();
-        double lon = locationDto.getLongitude();
-
-        
-        driver.setLatitude(lat);
-        driver.setLongitude(lon);
-
+    public ResponseEntity<ResponseStructure<?>> updateCurrentLocation(CurrentLocationDTO locationDto) {
+        Double lat = locationDto.getLatitude();
+        Double lon = locationDto.getLongitude();
+        if (lat == null || lon == null) throw new IllegalArgumentException("Latitude and longitude are required");
 
         String address = locationIQService.getCityFromCoordinates(lat, lon);
-        driver.setCurrentAddress(address);
+        if (address == null || address.isEmpty()) address = "Unknown Location";
 
-        Driver updatedDriver = driverRepository.save(driver);
+        ResponseStructure<Object> response = new ResponseStructure<>();
 
-        ResponseStructure<Driver> response = new ResponseStructure<>();
-        response.setStatuscode(HttpStatus.OK.value());
-        response.setMessage("Driver location updated successfully");
-        response.setData(updatedDriver);
+        // Driver case
+        if (locationDto.getDriverMobileNo() != null) {
+            Driver driver = driverRepository.findByMobileNo(locationDto.getDriverMobileNo())
+                    .orElseThrow(() -> new DriverMobileNoNotFound("Driver not found"));
+            driver.setLatitude(lat);
+            driver.setLongitude(lon);
+            driver.setCurrentAddress(address);
+            response.setData(driverRepository.save(driver));
+            response.setMessage("Driver location updated successfully");
+            response.setStatuscode(HttpStatus.OK.value());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
 
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        // Customer case
+        if (locationDto.getCustomerMobileNo() != null) {
+            Customer customer = customerRepository.findByMobileNo(locationDto.getCustomerMobileNo())
+                    .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
+            customer.setLatitude(lat);
+            customer.setLongitude(lon);
+            customer.setCurrentLocation(address);
+            response.setData(customerRepository.save(customer));
+            response.setMessage("Customer location updated successfully");
+            response.setStatuscode(HttpStatus.OK.value());
+            return new ResponseEntity<>(response, HttpStatus.OK);
+        }
+
+        throw new IllegalArgumentException("Either driverMobileNo or customerMobileNo must be provided");
     }
+
 
 
     
@@ -95,6 +114,7 @@ public class DriverService {
 
         return new ResponseEntity<>(rs, HttpStatus.OK);
     }
+    
     
     
     
@@ -140,88 +160,115 @@ public class DriverService {
 
 
 
+    
 
 
     public ResponseEntity<ResponseStructure<Driver>> driverCancelTheBooking(long driverId, long bookingId) {
 
         ResponseStructure<Driver> structure = new ResponseStructure<>();
 
-        Driver driver = driverRepository.findById(driverId)
-                .orElseThrow(() -> new DriverNotFoundException("Driver not found"));
+        // 1️⃣ Fetch driver
+        Optional<Driver> optionalDriver = driverRepository.findById(driverId);
+        if (optionalDriver.isEmpty()) {
+            structure.setStatuscode(HttpStatus.NOT_FOUND.value());
+            structure.setMessage("Driver not found");
+            structure.setData(null);
+            return new ResponseEntity<>(structure, HttpStatus.NOT_FOUND);
+        }
 
-      
-        autoUnblockIf24HoursPassed(driver);
+        Driver driver = optionalDriver.get();
 
+        // 2️⃣ Auto-unblock if needed
+        autoUnblockIfNextDayPassed(driver);
+
+        // 3️⃣ Block check
         if ("BLOCKED".equalsIgnoreCase(driver.getStatus())) {
-            throw new IllegalStateException("Driver is blocked. Please try after 24 hours");
+            structure.setStatuscode(HttpStatus.BAD_REQUEST.value());
+            structure.setMessage("Driver is blocked. Please try next day");
+            structure.setData(driver);
+            return new ResponseEntity<>(structure, HttpStatus.BAD_REQUEST);
         }
 
-        Booking booking = bookingRepository.findByIdAndDriverId(bookingId, driverId)
-                .orElseThrow(() -> new BookingNotFoundException("Booking not found for this driver"));
+        // 4️⃣ Fetch booking
+        Optional<Booking> optionalBooking = bookingRepository.findByIdAndDriverId(bookingId, driverId);
+        if (optionalBooking.isEmpty()) {
+            structure.setStatuscode(HttpStatus.NOT_FOUND.value());
+            structure.setMessage("Booking not found for this driver");
+            structure.setData(driver);
+            return new ResponseEntity<>(structure, HttpStatus.NOT_FOUND);
+        }
 
+        Booking booking = optionalBooking.get();
+
+        // ✅ Only cancel ACTIVE rides
+        if (!"ACTIVE".equalsIgnoreCase(booking.getBookingStatus())) {
+            structure.setStatuscode(HttpStatus.BAD_REQUEST.value());
+            structure.setMessage("Only active rides can be cancelled");
+            structure.setData(driver);
+            return new ResponseEntity<>(structure, HttpStatus.BAD_REQUEST);
+        }
+
+        // 5️⃣ Count previous cancels
         List<Booking> bookingList = bookingRepository.findByDriverId(driverId);
+        long cancelCount = bookingList.stream()
+                .filter(b -> "CANCELLED_BY_DRIVER".equalsIgnoreCase(b.getBookingStatus()))
+                .count();
 
-        int cancelCount = 0;
-        for (Booking b : bookingList) {
-            if ("CANCELLED_BY_DRIVER".equalsIgnoreCase(b.getBookingStatus())) {
-                cancelCount++;
-            }
+        // 6️⃣ Cancel booking
+        booking.setBookingStatus("CANCELLED_BY_DRIVER");
+
+        // 7️⃣ Update driver + vehicle
+        driver.setStatus("Available");
+        if (driver.getVehicle() != null) {
+            driver.getVehicle().setVehicleavailabilityStatus("Available");
         }
 
+        long totalCancels = cancelCount + 1;
 
-        // cancel current booking9
-      
-        booking.setBookingStatus("CANCELLED_BY_DRIVER");
-        
-        driver.setStatus("Available");
-        driver.getVehicle().setVehicleavailabilityStatus("Available");
-
-        int totalCancels = cancelCount + 1;
-
-   
+        // 8️⃣ Block if >= 5 cancels
         if (totalCancels >= 5) {
             driver.setStatus("BLOCKED");
             driver.setBlockedAt(LocalDateTime.now());
-
             if (driver.getVehicle() != null) {
                 driver.getVehicle().setVehicleavailabilityStatus("UNAVAILABLE");
             }
         }
 
-        driverRepository.save(driver);
+        // 9️⃣ Save
         bookingRepository.save(booking);
+        driverRepository.save(driver);
 
+        // 🔟 Response
         structure.setStatuscode(HttpStatus.OK.value());
         structure.setMessage(
                 totalCancels >= 5
-                ? "Booking cancelled. Driver is blocked for 24 hours"
-                : "Booking cancelled successfully"
+                        ? "Booking cancelled. Driver is blocked until next day"
+                        : "Booking cancelled successfully"
         );
         structure.setData(driver);
 
         return new ResponseEntity<>(structure, HttpStatus.OK);
     }
-    
-    
-    
-    
-    private void autoUnblockIf24HoursPassed(Driver driver) {
 
-        if ("BLOCKED".equalsIgnoreCase(driver.getStatus())
-                && driver.getBlockedAt() != null) {
+ 
 
-            if (driver.getBlockedAt().plusHours(24).isBefore(LocalDateTime.now())) {
-
+    
+    
+    /* ================= AUTO UNBLOCK NEXT DAY ================= */
+    private void autoUnblockIfNextDayPassed(Driver driver) {
+        if (driver.getBlockedAt() != null) {
+            // Compare dates only, ignore time
+            if (driver.getBlockedAt().toLocalDate().isBefore(LocalDateTime.now().toLocalDate())) {
                 driver.setStatus("Available");
                 driver.setBlockedAt(null);
-
                 if (driver.getVehicle() != null) {
-                    driver.getVehicle().setVehicleavailabilityStatus("AVAILABLE");
+                    driver.getVehicle().setVehicleavailabilityStatus("Available");
                 }
-
                 driverRepository.save(driver);
             }
         }
     }
 }
+  
+
 

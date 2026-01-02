@@ -1,7 +1,8 @@
 package com.quickmove.GoFaster.service;
 
-import java.time.LocalDateTime;
+import java.time.LocalDateTime; 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -182,34 +183,105 @@ public class BookingService {
 
     public ResponseEntity<ResponseStructure<Booking>> getDriverActiveBooking(long driverMobileNo) {
 
-        // 1️⃣ Check driver exists
-        Driver driver = driverRepo
-                .findByMobileNo(driverMobileNo)
-                .orElseThrow(() -> new DriverNotFoundException("Driver not found"));
+        Driver driver = driverRepo.findByMobileNo(driverMobileNo)
+                .orElseThrow(() -> new RuntimeException("Driver not found"));
 
-        // 2️⃣ Find active booking
-        Booking booking = bookingRepo
-                .findDriverActiveBooking(driverMobileNo)
-                .orElse(null);
+        Optional<Booking> optionalBooking =
+                bookingRepo.findDriverActiveBooking(driverMobileNo);
 
         ResponseStructure<Booking> response = new ResponseStructure<>();
         response.setStatuscode(HttpStatus.OK.value());
 
-        if (booking == null) {
-            response.setMessage("No active booking found");
+        if (optionalBooking.isEmpty()) {
+            response.setMessage("No active ride");
             response.setData(null);
         } else {
-            response.setMessage("Active booking fetched successfully");
-            response.setData(booking);
+            response.setMessage("Active ride found");
+            response.setData(optionalBooking.get());
         }
 
         return ResponseEntity.ok(response);
     }
 
+    /* ================= ACCEPT BOOKING ================= */
+    public ResponseEntity<ResponseStructure<Booking>> acceptBooking(
+            long bookingId, long driverMobileNo) {
 
+        Booking booking = bookingRepo.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
 
+        Driver driver = driverRepo.findByMobileNo(driverMobileNo)
+                .orElseThrow(() -> new RuntimeException("Driver not found"));
+
+        booking.setDriver(driver);
+        booking.setBookingStatus("ONGOING");
+
+        bookingRepo.save(booking);
+
+        ResponseStructure<Booking> response = new ResponseStructure<>();
+        response.setStatuscode(HttpStatus.OK.value());
+        response.setMessage("Ride accepted");
+        response.setData(booking);
+
+        return ResponseEntity.ok(response);
+    }
+    
+    
+    public ResponseEntity<ResponseStructure<Booking>> completeRideByDriver(
+            long driverMobileNo,
+            long bookingId) {
+
+        ResponseStructure<Booking> structure = new ResponseStructure<>();
+
+        Driver driver = driverRepo.findByMobileNo(driverMobileNo)
+                .orElseThrow(() -> new RuntimeException("Driver not found"));
+
+        Booking booking = bookingRepo.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        /* 🔐 SECURITY CHECK */
+        if (booking.getDriver() == null ||
+            booking.getDriver().getId() != driver.getId()) {
+            throw new RuntimeException("This ride does not belong to this driver");
+        }
+
+        /* ✅ STATUS CHECK */
+        if (!booking.getBookingStatus().equals("ACTIVE") &&
+            !booking.getBookingStatus().equals("ONGOING")) {
+            throw new RuntimeException("Ride is not active");
+        }
+
+        /* ✅ COMPLETE RIDE */
+        booking.setBookingStatus("COMPLETED");
+
+        bookingRepo.save(booking);
+
+        structure.setStatuscode(HttpStatus.OK.value());
+        structure.setMessage("Ride completed successfully");
+        structure.setData(booking);
+
+        return new ResponseEntity<>(structure, HttpStatus.OK);
+    }
+    
+    
+    
+    public ResponseEntity<ResponseStructure<Booking>> getDriverPendingPayment(long mobileNo) {
+    	Booking booking = bookingRepo.findCompletedUnpaidBooking(mobileNo)
+                .orElse(null);
+
+	     ResponseStructure<Booking> rs = new ResponseStructure<>();
+	     rs.setStatuscode(HttpStatus.OK.value());
+	     rs.setMessage("Pending payment booking");
+	     rs.setData(booking);
+	     return ResponseEntity.ok(rs);
+    }
+
+   
+     
     @Autowired
     private MailService mailer;
+    
+    
 	public void sendingMail() {
 		// TODO Auto-generated method stub
 		
@@ -220,4 +292,6 @@ public class BookingService {
 			);
 
 	}
+    
+    
 }
