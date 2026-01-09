@@ -1,9 +1,7 @@
 package com.quickmove.GoFaster.service;
 
-import java.util.ArrayList; 
+import java.util.ArrayList;  
 import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -121,48 +119,54 @@ public class CustomerService {
 	
 	public ResponseEntity<ResponseStructure<BookingHistoryDto>> getCustomerBookingHistoryByMobile(Long mobileNo) {
 
-		Customer customer = customerRepo
-    	        .findByMobileNo(mobileNo)
-    	        .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
+	    Customer customer = customerRepo
+	            .findByMobileNo(mobileNo)
+	            .orElseThrow(() -> new CustomerNotFoundException("Customer not found"));
 
-        List<Booking> bookings = customer.getBookingList();
+	    List<Booking> bookings = customer.getBookingList();
 
-        if (bookings == null || bookings.isEmpty()) {
-            throw new BookingNotFoundException("No booking history found");
-        }
+	    if (bookings == null || bookings.isEmpty()) {
+	        throw new BookingNotFoundException("No booking history found");
+	    }
 
-        List<RideDetailsDto> history = new ArrayList<>();
-        double totalAmount = 0;
+	    List<RideDetailsDto> history = new ArrayList<>();
+	    double totalAmount = 0;
 
-        for (Booking booking : bookings) {
+	    for (Booking booking : bookings) {
 
-           
-            if (!"COMPLETED".equalsIgnoreCase(booking.getBookingStatus())) {
-                continue;
-            }
+	    	if (!"COMPLETED".equalsIgnoreCase(booking.getBookingStatus()) &&
+	    		    ! "CANCELLED".equalsIgnoreCase(booking.getBookingStatus())) {
+	    		    continue;
+	    		}
+	        RideDetailsDto ride = new RideDetailsDto();
+	        ride.setFromLocation(booking.getSourceLocation());
+	        ride.setToLocation(booking.getDestinationLocation());
+	        ride.setDistance(booking.getDistanceTravelled());
+	        ride.setFare(booking.getFare());
+	        ride.setStatus(booking.getBookingStatus()); // 🔥 Important for frontend
 
-            RideDetailsDto ride = new RideDetailsDto();
-            ride.setFromLocation(booking.getSourceLocation());
-            ride.setToLocation(booking.getDestinationLocation());
-            ride.setDistance(booking.getDistanceTravelled());
-            ride.setFare(booking.getFare());
 
-            history.add(ride);
-            totalAmount += booking.getFare();
-        }
+	        history.add(ride);
 
-        BookingHistoryDto dto = new BookingHistoryDto();
-        dto.setHistory(history);
-        dto.setToatalAmount(totalAmount);
+	        // ✅ Only completed rides count in total amount
+	        if ("COMPLETED".equalsIgnoreCase(booking.getBookingStatus())) {
+	            totalAmount += booking.getFare();
+	        }
+	    }
 
-        ResponseStructure<BookingHistoryDto> response = new ResponseStructure<>();
-        response.setStatuscode(HttpStatus.OK.value());
-        response.setMessage("Customer booking history fetched successfully");
-        response.setData(dto);
+	    BookingHistoryDto dto = new BookingHistoryDto();
+	    dto.setHistory(history);
+	    dto.setToatalAmount(totalAmount);
 
-        return ResponseEntity.ok(response);
-    }
+	    ResponseStructure<BookingHistoryDto> response = new ResponseStructure<>();
+	    response.setStatuscode(HttpStatus.OK.value());
+	    response.setMessage("Customer booking history fetched successfully");
+	    response.setData(dto);
 
+	    return ResponseEntity.ok(response);
+	}
+
+	
 	
 	
 	public ResponseEntity<ResponseStructure<Customer>> cancelRideByCustomer(
@@ -179,12 +183,12 @@ public class CustomerService {
 	        throw new RuntimeException("Booking does not belong to this customer");
 	    }
 
-	    if ("CANCELLED_BY_CUSTOMER".equalsIgnoreCase(booking.getBookingStatus())) {
+	    if ("CANCELLED".equalsIgnoreCase(booking.getBookingStatus())) {
 	        throw new RuntimeException("Booking already cancelled");
 	    }
 
 	    // ✅ CANCEL BOOKING
-	    booking.setBookingStatus("CANCELLED_BY_CUSTOMER");
+	    booking.setBookingStatus("CANCELLED");
 
 	    // ✅ DRIVER + VEHICLE UPDATE
 	    Driver driver = booking.getDriver();

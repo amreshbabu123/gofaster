@@ -121,13 +121,11 @@ public class DriverService {
     
     
     
-    public ResponseEntity<ResponseStructure<BookingHistoryDto>>getDriverBookingHistoryByMobile(Long mobileNo) {
+    public ResponseEntity<ResponseStructure<BookingHistoryDto>> getDriverBookingHistoryByMobile(Long mobileNo) {
 
-        List<Booking> bookings =
-                bookingRepository.findByDriver_MobileNoAndBookingStatus(
-                        mobileNo, "COMPLETED");
+        List<Booking> bookings = bookingRepository.findByDriver_MobileNo(mobileNo);
 
-        if (bookings.isEmpty()) {
+        if (bookings == null || bookings.isEmpty()) {
             throw new RuntimeException("No booking history found for this driver");
         }
 
@@ -136,14 +134,25 @@ public class DriverService {
 
         for (Booking booking : bookings) {
 
+            // Only COMPLETED and CANCELLED
+            if (!"COMPLETED".equalsIgnoreCase(booking.getBookingStatus()) &&
+                !"CANCELLED".equalsIgnoreCase(booking.getBookingStatus())) {
+                continue;
+            }
+
             RideDetailsDto ride = new RideDetailsDto();
             ride.setFromLocation(booking.getSourceLocation());
             ride.setToLocation(booking.getDestinationLocation());
             ride.setDistance(booking.getDistanceTravelled());
             ride.setFare(booking.getFare());
+            ride.setStatus(booking.getBookingStatus());   // 🔥 IMPORTANT
 
             history.add(ride);
-            totalAmount += booking.getFare();
+
+            // Only completed adds to earnings
+            if ("COMPLETED".equalsIgnoreCase(booking.getBookingStatus())) {
+                totalAmount += booking.getFare();
+            }
         }
 
         BookingHistoryDto dto = new BookingHistoryDto();
@@ -157,6 +166,7 @@ public class DriverService {
 
         return ResponseEntity.ok(response);
     }
+
 
 
 
@@ -211,11 +221,11 @@ public class DriverService {
         // 5️⃣ Count previous cancels
         List<Booking> bookingList = bookingRepository.findByDriverId(driverId);
         long cancelCount = bookingList.stream()
-                .filter(b -> "CANCELLED_BY_DRIVER".equalsIgnoreCase(b.getBookingStatus()))
+                .filter(b -> "CANCELLED".equalsIgnoreCase(b.getBookingStatus()))
                 .count();
 
         // 6️⃣ Cancel booking
-        booking.setBookingStatus("CANCELLED_BY_DRIVER");
+        booking.setBookingStatus("CANCELLED");
 
         // 7️⃣ Update driver + vehicle
         driver.setStatus("Available");

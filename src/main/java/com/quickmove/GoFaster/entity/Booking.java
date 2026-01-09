@@ -1,8 +1,6 @@
 package com.quickmove.GoFaster.entity;
 
-import java.time.LocalDateTime; 
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.time.LocalDateTime;  
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -32,7 +30,6 @@ public class Booking {
     private String paymentStatus = "not paid";
     
     @Column(nullable = true)
-    @JsonIgnore
     private Integer deliveryOtp ;
 
 
@@ -169,9 +166,10 @@ public class Booking {
 		this.deliveryOtp = deliveryOtp;
 	}
 
+
 	public Booking(Long id, String sourceLocation, String destinationLocation, double distanceTravelled, double fare,
 			double estimatedTimeRequired, LocalDateTime bookingDate, String bookingStatus, String paymentStatus,
-			Customer customer, Driver driver, Vehicle vehicle, Payments payment) {
+			Integer deliveryOtp, Customer customer, Driver driver, Vehicle vehicle, Payments payment) {
 		super();
 		this.id = id;
 		this.sourceLocation = sourceLocation;
@@ -182,6 +180,7 @@ public class Booking {
 		this.bookingDate = bookingDate;
 		this.bookingStatus = bookingStatus;
 		this.paymentStatus = paymentStatus;
+		this.deliveryOtp = deliveryOtp;
 		this.customer = customer;
 		this.driver = driver;
 		this.vehicle = vehicle;

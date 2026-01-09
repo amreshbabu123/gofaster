@@ -1,6 +1,6 @@
 package com.quickmove.GoFaster.service;
 
-import java.time.LocalDateTime; 
+import java.time.LocalDateTime;   
 import java.util.List;
 import java.util.Optional;
 
@@ -39,6 +39,9 @@ public class BookingService {
 
     @Autowired
     private LocationIQService locationIQ;
+    
+    @Autowired
+    private MailService mailer;
 
 
     public ResponseEntity<ResponseStructure<Booking>> bookVehicle(BookVehicleDto bookVehicleDto) {
@@ -137,8 +140,7 @@ public class BookingService {
                 "Do NOT share it in chat or screenshots.\n\n" +
                 "— QuickMove Support Team";
         
-        // mailer.sendMail(customer.getEmail(), subject, message);
-        mailer.sendMail("boyaramanjaneyulu665@gmail.com", subject, message);
+        mailer.sendMail(customer.getEmailId(), subject, message);
 
         ResponseStructure<Booking> response = new ResponseStructure<>();
         response.setStatuscode(HttpStatus.CREATED.value());
@@ -214,7 +216,7 @@ public class BookingService {
                 .orElseThrow(() -> new RuntimeException("Driver not found"));
 
         booking.setDriver(driver);
-        booking.setBookingStatus("ONGOING");
+        booking.setBookingStatus("ACCEPTED");
 
         bookingRepo.save(booking);
 
@@ -268,30 +270,36 @@ public class BookingService {
     public ResponseEntity<ResponseStructure<Booking>> getDriverPendingPayment(long mobileNo) {
     	Booking booking = bookingRepo.findCompletedUnpaidBooking(mobileNo)
                 .orElse(null);
-
 	     ResponseStructure<Booking> rs = new ResponseStructure<>();
 	     rs.setStatuscode(HttpStatus.OK.value());
 	     rs.setMessage("Pending payment booking");
 	     rs.setData(booking);
 	     return ResponseEntity.ok(rs);
     }
+    
 
-   
-     
-    @Autowired
-    private MailService mailer;
-    
-    
-	public void sendingMail() {
-		// TODO Auto-generated method stub
-		
-		mailer.sendMail(
-			    "boyaramanjaneyulu665@gmail.com",
-			    "Booking Confirmed",
-			    "Your booking has been successfully confirmed."
-			);
+    public ResponseEntity<ResponseStructure<Booking>> startRideWithOtp(
+            long bookingId, String otp) {
 
-	}
-    
-    
+        Booking booking = bookingRepo.findById(bookingId)
+                .orElseThrow(() -> new RuntimeException("Booking not found"));
+
+        if (!booking.getBookingStatus().equals("ACCEPTED")) {
+            throw new RuntimeException("Ride cannot be started now");
+        }
+        // ✅ Convert DB OTP to String and trim both sides
+        if (!String.valueOf(booking.getDeliveryOtp()).trim().equals(otp.trim())) {
+            throw new RuntimeException("Invalid OTP");
+        }
+
+        booking.setBookingStatus("ONGOING");
+        bookingRepo.save(booking);
+
+        ResponseStructure<Booking> response = new ResponseStructure<>();
+        response.setStatuscode(HttpStatus.OK.value());
+        response.setMessage("OTP verified. Ride started.");
+        response.setData(booking);
+
+        return ResponseEntity.ok(response);
+    }
 }

@@ -1,11 +1,10 @@
 package com.quickmove.GoFaster.controller;
 
-import org.springframework.web.bind.annotation.RestController;   
+import org.springframework.web.bind.annotation.RestController;    
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,6 +43,14 @@ public class BookingController {
 	         @RequestParam long bookingId,
 	         @RequestParam long driverMobileNo) {
 	     return bookingService.acceptBooking(bookingId, driverMobileNo);
+	 }
+	 
+	 @PutMapping("/driver/start-ride")
+	 public ResponseEntity<ResponseStructure<Booking>> startRide(
+	         @RequestParam long bookingId,
+	         @RequestParam String otp) {
+
+	     return bookingService.startRideWithOtp(bookingId, otp);
 	 }
 
 	 @PutMapping("/driver/complete")
