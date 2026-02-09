@@ -1,6 +1,6 @@
 package com.quickmove.GoFaster.security;
 
-import java.util.Map; 
+import java.util.Map;  
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
