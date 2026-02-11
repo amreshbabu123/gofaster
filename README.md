@@ -1,19 +1,113 @@
-Project is done by a group.
+👨‍💻 Amresh Babu – Projects Portfolio
 
-Java Full Stack Developer Intern– Robowaves
-GitHub: github.com/amreshbabu123
-• Developed a Rapido-like ride booking application (GoFaster) using Java and Spring Boot.
-• Implemented REST APIs for user registration, ride booking, and ride completion.
-• Used PostgreSQL for data persistence and Postman for API testing.
-• Followed Git-based version control and layered architecture.
-Projects
-E-Commerce Website (Frontend Only)
-• Developed a responsive e-commerce website using HTML, CSS, and JavaScript.
-• Implemented product categories including sunglasses, clothes, jackets, and watches.
-• Enabled cart functionality allowing users to browse, add products, and simulate purchases.
-• Focused on clean UI and user-friendly shopping experience.
-GoFaster– Ride Booking RESTful API
-• Built a Rapido-like ride booking REST API using Java and Spring Boot.
-• Implemented customer and driver registration with role-based functionality.
-• Enabled ride booking, price-per-kilometer setting, ride acceptance, and completion.
-• Technologies used: Spring Boot, PostgreSQL, Git, Supabase, Postman.
+Java Full Stack Developer Intern at Robowaves
+🔗 GitHub: github.com/amreshbabu123
+
+🚀 About Me
+
+I am a Java Full Stack Developer Intern with hands-on experience in building RESTful APIs and responsive web applications. I have worked on backend development using Java, Spring Boot, PostgreSQL, and frontend development using HTML, CSS, and JavaScript.
+
+🛵 GoFaster – Ride Booking RESTful API
+
+A Rapido-like ride booking application built using Java and Spring Boot.
+
+⚠️ Note: This project was developed as a group project.
+
+📌 Features
+
+👤 Customer & Driver Registration (Role-based functionality)
+
+🚕 Ride Booking System
+
+💰 Price-per-Kilometer Configuration
+
+✅ Ride Acceptance by Drivers
+
+🏁 Ride Completion Workflow
+
+🔐 RESTful API Architecture
+
+🛠️ Technologies Used
+
+Java
+
+Spring Boot
+
+PostgreSQL
+
+Supabase
+
+Git & GitHub
+
+Postman (API Testing)
+
+🏗️ Architecture
+
+Layered Architecture
+
+Controller Layer
+
+Service Layer
+
+Repository Layer
+
+REST API Design Principles
+
+Git-based Version Control
+
+🛒 E-Commerce Website (Frontend Only)
+
+A responsive e-commerce website built using HTML, CSS, and JavaScript.
+
+📌 Features
+
+🛍️ Product Categories:
+
+Sunglasses
+
+Clothes
+
+Jackets
+
+Watches
+
+🛒 Cart Functionality
+
+📱 Fully Responsive Design
+
+🎨 Clean and User-Friendly UI
+
+🛠️ Technologies Used
+
+HTML
+
+CSS
+
+JavaScript
+
+💼 Internship Experience
+Java Full Stack Developer Intern – Robowaves
+
+Developed a Rapido-like ride booking application (GoFaster) using Java and Spring Boot.
+
+Implemented REST APIs for:
+
+User Registration
+
+Ride Booking
+
+Ride Completion
+
+Used PostgreSQL for database management.
+
+Tested APIs using Postman.
+
+Followed structured layered architecture.
+
+Worked in a collaborative team environment using Git.
+
+📬 Contact
+
+If you would like to collaborate or connect:
+
+🔗 GitHub: github.com/amreshbabu123
